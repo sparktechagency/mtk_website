@@ -3,6 +3,7 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Poltawski_Nowy } from "next/font/google";
 import { ThemeProvider } from "@/components/provider/theme-provider";
+import QueryProvider from "@/components/provider/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 const poltawski = Poltawski_Nowy({
@@ -34,15 +35,17 @@ export default function RootLayout({ children }) {
 
       >
         <NextTopLoader color="#E4AF00" height={2} showSpinner={false} />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

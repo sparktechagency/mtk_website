@@ -1,15 +1,15 @@
 import axios from 'axios';
 import useAuthStore from '@/store/auth';
 
-const axiosInstance = axios.create({
-  baseURL: 'https://api.example.com',
+const api = axios.create({
+  baseURL: 'http://localhost:9090/api/v1',
 });
 
-axiosInstance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `${token}`;
     }
 
     if (config.data instanceof FormData) {
@@ -25,4 +25,4 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-export default axiosInstance;
+export default api;

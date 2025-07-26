@@ -6,10 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { login } from "@/api/auth/login";
+import useAuthStore from "@/store/auth";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -19,6 +24,22 @@ const loginSchema = z.object({
 export function LoginForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const router = useRouter();
+  const setToken = useAuthStore((state) => state.setToken);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      setToken(data?.data?.accessToken);
+      toast.success("Login successful!");
+      router.push("/");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
+    },
+  });
+
+  console.log(isPending);
 
   const {
     register,
@@ -30,8 +51,7 @@ export function LoginForm({ className, ...props }) {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    // Handle login logic here
+    mutate(data);
   };
 
   return (
@@ -89,7 +109,8 @@ export function LoginForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid}>
+              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Login
               </Button>
             </div>

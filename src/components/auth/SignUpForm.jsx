@@ -7,9 +7,13 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod"; 
 import * as z from "zod";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { register as registration } from "@/api/auth/register";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -24,6 +28,21 @@ const signUpSchema = z.object({
 export function SignUpForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const router = useRouter();
+
+
+  const {mutate, isPending} = useMutation({
+    mutationFn: registration,
+    onSuccess: (data) => {
+      console.log(data);
+      router.push("/auth/verification");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Sign up failed. Please check your credentials.");
+    },
+  });
+
+
 
   const {
     register,
@@ -35,8 +54,11 @@ export function SignUpForm({ className, ...props }) {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    // Handle sign up logic here
+    mutate({
+      fullName: data?.name,
+      email: data?.email,
+      password: data?.password
+    });
   };
 
   return (
@@ -122,7 +144,8 @@ export function SignUpForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid}>
+              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Sign Up
               </Button>
             </div>

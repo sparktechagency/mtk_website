@@ -7,16 +7,28 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Search, Heart, User, ShoppingBag, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getMe } from "@/api/user/getMe";
+import useAuthStore from "@/store/auth";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun } from "lucide-react" 
 
 
 const Navbar = () => {
     const { setTheme } = useTheme()
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const [userName, setUserName] = useState("Golap Hasan");
+    const token = useAuthStore((state) => state.token);
+    const clearToken = useAuthStore((state) => state.clearToken);
+
+    const { data: user, isLoading: isUserLoading, isError: isUserError } = useQuery({
+        queryKey: ["user"],
+        queryFn: getMe,
+        enabled: !!token,
+    });
+
+    const isLoggedIn = !!token && !!user;
+    const userName = user?.fullName || "Guest";
     const [showSearchInput, setShowSearchInput] = useState(false);
 
     const pathname = usePathname();
@@ -179,7 +191,7 @@ const Navbar = () => {
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                             </Link>
-                                            <DropdownMenuItem onClick={() => setIsLoggedIn(false)} className={"cursor-pointer"}>
+                                            <DropdownMenuItem onClick={() => clearToken()} className={"cursor-pointer"}>
                                                 <LogOut className="mr-2 h-4 w-4 text-red-500" />
                                                 <span className="text-red-500">Logout</span>
                                             </DropdownMenuItem>

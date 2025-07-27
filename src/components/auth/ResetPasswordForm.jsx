@@ -50,7 +50,7 @@ export function ResetPasswordForm({ className, ...props }) {
       toast.success("Password reset successful!");
       localStorage.removeItem("tempEmailForOTPVerification")
       localStorage.removeItem("tempEmailOTP")
-      router.push("/")
+      router.push("/auth/login")
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Password reset failed.");
@@ -63,6 +63,7 @@ export function ResetPasswordForm({ className, ...props }) {
       otp: resetPassOTP,
       password: data?.newPassword
     };
+    console.log(credential);
     mutate(credential);
   };
 

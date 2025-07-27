@@ -13,6 +13,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyEmail } from "@/api/auth/verifyEmail";
 import { verifyOTP } from "@/api/auth/verifyOTP";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { sendOTP } from "@/api/auth/sendOTP";
 
 const verificationSchema = z.object({
   code: z.string().min(6, {
@@ -23,7 +25,27 @@ const verificationSchema = z.object({
 export function VerificationForm({ className, ...props }) {
   const router = useRouter();
   const token = useSearchParams().get("token");
-  const otpMail = localStorage.getItem("tempEmailForOTPVerification")
+  const otpMail = typeof window !== 'undefined' ? localStorage.getItem("tempEmailForOTPVerification") : null;
+
+  const [timeLeft, setTimeLeft] = useState(60); 
+  const [canResend, setCanResend] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (timeLeft === 0) {
+      setCanResend(true);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
   const {
     control,
@@ -48,6 +70,18 @@ export function VerificationForm({ className, ...props }) {
     },
   })
 
+  const { mutate: mutateResendOTP, isPending: isPendingResend } = useMutation({
+    mutationFn: sendOTP,
+    onSuccess: () => {
+      toast.success("New OTP sent to your email!");
+      setTimeLeft(60);
+      setCanResend(false);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to send new OTP.");
+    },
+  });
+
   // Verify email
   const { isSuccess, isPending, error } = useQuery({
     queryKey: ["verify-email", token],
@@ -57,10 +91,24 @@ export function VerificationForm({ className, ...props }) {
 
 
   const onSubmit = (data) => {
-    localStorage.setItem("tempEmailOTP", data?.code)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("tempEmailOTP", data?.code);
+    }
     if (otpMail && data?.code) {
       const credential = { email: otpMail, otp: data?.code };
       mutateOTP(credential);
+    } else {
+      toast.error("Email or OTP is missing. Please go back to forgot password page.");
+      router.push("/auth/forgot-password");
+    }
+  };
+
+  const handleResendOTP = () => {
+    if (otpMail) {
+      mutateResendOTP(otpMail);
+    } else {
+      toast.error("Email not found. Please go back to forgot password page.");
+      router.push("/auth/forgot-password");
     }
   };
 
@@ -81,6 +129,11 @@ export function VerificationForm({ className, ...props }) {
                   <p className="text-sm text-subtitle">
                     Enter the 6-digit code sent to your email.
                   </p>
+                  {otpMail && (
+                    <p className="text-sm text-gray-600">
+                      Code sent to: <span className="font-medium">{otpMail}</span>
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col items-center gap-3 justify-center">
@@ -106,6 +159,26 @@ export function VerificationForm({ className, ...props }) {
                   {errors.code && (
                     <p className="text-red-500 text-sm text-center">
                       {errors.code.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Resend OTP button */}
+                <div className="flex justify-center text-sm text-subtitle">
+                  {canResend ? (
+                    <Button
+                      type="button"
+                      variant="link"
+                      onClick={handleResendOTP}
+                      disabled={isPendingResend}
+                      className="p-0 h-auto"
+                    >
+                      {isPendingResend && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Resend Code
+                    </Button>
+                  ) : (
+                    <p className="text-sm text-subtitle">
+                      Resend in {timeLeft} seconds
                     </p>
                   )}
                 </div>

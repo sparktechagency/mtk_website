@@ -7,7 +7,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().token;
+    const token = typeof window !== 'undefined' ? useAuthStore.getState().token : null;
     if (token) {
       config.headers.Authorization = `${token}`;
     }
@@ -20,7 +20,20 @@ api.interceptors.request.use(
 
     return config;
   },
+  
   (error) => {
+    return Promise.reject(error);
+  }
+
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      useAuthStore((state) => state.clearToken);
+      window.location.href = "/auth/login";
+    }
     return Promise.reject(error);
   }
 );

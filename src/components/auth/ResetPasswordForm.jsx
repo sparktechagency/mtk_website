@@ -8,9 +8,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { setNewPassword } from "@/api/auth/setNewPassword";
+import { toast } from "sonner";
 
 const resetPasswordSchema = z.object({
   newPassword: z.string().min(6, { message: "New password must be at least 6 characters." }),
@@ -22,6 +25,10 @@ const resetPasswordSchema = z.object({
 
 export function ResetPasswordForm({ className, ...props }) {
   const router = useRouter()
+
+  const resetPassMail = localStorage.getItem("tempEmailForOTPVerification")
+  const resetPassOTP = localStorage.getItem("tempEmailOTP")
+
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
@@ -37,10 +44,26 @@ export function ResetPasswordForm({ className, ...props }) {
     mode: "onChange",
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: setNewPassword,
+    onSuccess: () => {
+      toast.success("Password reset successful!");
+      localStorage.removeItem("tempEmailForOTPVerification")
+      localStorage.removeItem("tempEmailOTP")
+      router.push("/")
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Password reset failed.");
+    },
+  })
+
   const onSubmit = (data) => {
-    console.log(data);
-    // Handle password reset logic here
-    router.push("/")
+    const credential = {
+      email: resetPassMail,
+      otp: resetPassOTP,
+      password: data?.newPassword
+    };
+    mutate(credential);
   };
 
   return (
@@ -101,7 +124,8 @@ export function ResetPasswordForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid}>
+              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Reset Password
               </Button>
             </div>

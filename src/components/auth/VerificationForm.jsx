@@ -55,7 +55,9 @@ export function VerificationForm({ className, ...props }) {
     enabled: !!token,
   });
 
+
   const onSubmit = (data) => {
+    localStorage.setItem("tempEmailOTP", data?.code)
     if (otpMail && data?.code) {
       const credential = { email: otpMail, otp: data?.code };
       mutateOTP(credential);

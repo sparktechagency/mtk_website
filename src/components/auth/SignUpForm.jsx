@@ -6,14 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; 
 import * as z from "zod";
 import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { register as registration } from "@/api/auth/register";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -28,21 +27,16 @@ const signUpSchema = z.object({
 export function SignUpForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const router = useRouter();
-
 
   const {mutate, isPending} = useMutation({
     mutationFn: registration,
-    onSuccess: (data) => {
-      console.log(data);
-      router.push("/auth/verification");
+    onSuccess: () => {
+      toast.success("Please check your email to verify your account!");
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Sign up failed. Please check your credentials.");
     },
   });
-
-
 
   const {
     register,

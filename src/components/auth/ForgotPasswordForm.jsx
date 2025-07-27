@@ -8,8 +8,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { sendOTP } from "@/api/auth/sendOTP";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -26,9 +29,19 @@ export function ForgotPasswordForm({ className, ...props }) {
     mode: "onChange",
   });
 
+  const {mutate, isPending } = useMutation({
+    mutationFn: sendOTP,
+    onSuccess: () => {
+      toast.success("Please check your email for the OTP!");
+      router.push("/auth/verification")
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Verification failed.");
+    },
+  })
+
   const onSubmit = (data) => {
-    console.log(data);
-    router.push("/auth/verification")
+    mutate(data?.email)
   };
 
   return (
@@ -58,7 +71,8 @@ export function ForgotPasswordForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid}>
+              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Get Code
               </Button>
             </div>

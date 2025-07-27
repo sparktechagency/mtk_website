@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Heart, User, ShoppingBag, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket } from "lucide-react";
+import { Search, Heart, User, ShoppingBag, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, Moon, Sun } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,8 +12,7 @@ import { getMe } from "@/api/user/getMe";
 import useAuthStore from "@/store/auth";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
-import * as React from "react"
-import { Moon, Sun } from "lucide-react" 
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 const Navbar = () => {
@@ -21,7 +20,7 @@ const Navbar = () => {
     const token = useAuthStore((state) => state.token);
     const clearToken = useAuthStore((state) => state.clearToken);
 
-    const { data: user, isLoading: isUserLoading, isError: isUserError } = useQuery({
+    const { data: user, isPending: isUserPending } = useQuery({
         queryKey: ["user"],
         queryFn: getMe,
         enabled: !!token,
@@ -164,7 +163,12 @@ const Navbar = () => {
                                             <User className="h-5 w-5 text-subtitle" />
                                             <span className="sr-only">Profile</span>
                                         </Button>
-                                        {isLoggedIn && (
+                                        {isUserPending ? (
+                                            <div className="flex items-center gap-1">
+                                                <Skeleton className="h-4 w-23" />
+                                                <Skeleton className="h-4 w-4" />
+                                            </div>
+                                        ) : isLoggedIn && (
                                             <div className="flex items-center gap-1">
                                                 <span className="hidden md:block text-subtitle text-sm font-medium">{userName}</span>
                                                 <ChevronDown className="hidden md:block h-4 w-4 text-subtitle" />

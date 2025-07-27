@@ -39,7 +39,6 @@ export function LoginForm({ className, ...props }) {
     },
   });
 
-  console.log(isPending);
 
   const {
     register,

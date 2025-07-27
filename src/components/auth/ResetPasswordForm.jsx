@@ -26,8 +26,8 @@ const resetPasswordSchema = z.object({
 export function ResetPasswordForm({ className, ...props }) {
   const router = useRouter()
 
-  const resetPassMail = localStorage.getItem("tempEmailForOTPVerification")
-  const resetPassOTP = localStorage.getItem("tempEmailOTP")
+  const resetPassMail = typeof window !== 'undefined' ? localStorage.getItem("tempEmailForOTPVerification") : null
+  const resetPassOTP = typeof window !== 'undefined' ? localStorage.getItem("tempEmailOTP") : null
 
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
@@ -48,8 +48,10 @@ export function ResetPasswordForm({ className, ...props }) {
     mutationFn: setNewPassword,
     onSuccess: () => {
       toast.success("Password reset successful!");
-      localStorage.removeItem("tempEmailForOTPVerification")
-      localStorage.removeItem("tempEmailOTP")
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("tempEmailForOTPVerification")
+        localStorage.removeItem("tempEmailOTP")
+      }
       router.push("/auth/login")
     },
     onError: (error) => {

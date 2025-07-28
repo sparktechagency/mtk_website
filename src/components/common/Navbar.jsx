@@ -16,12 +16,13 @@ import { useGetMe } from "@/hooks/useGetMe";
 
 const Navbar = () => {
     const { setTheme } = useTheme()
+    const token = useAuthStore((state) => state.token);
     const clearToken = useAuthStore((state) => state.clearToken);
 
     const { user, isUserPending } = useGetMe()
 
-    const isLoggedIn = !!user;
-    const userName = user?.fullName || "Guest User";
+    const isLoggedIn = !!token && !!user;
+    const userName = user?.fullName || "Guest";
     const [showSearchInput, setShowSearchInput] = useState(false);
 
     const pathname = usePathname();

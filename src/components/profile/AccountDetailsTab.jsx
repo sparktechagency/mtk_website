@@ -5,7 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "../ui/skeleton";
 
-const AccountDetailsTab = ({ user, setActiveTab, addressData, isAddressPending }) => {
+const AccountDetailsTab = ({ user, setActiveTab, addressData, isUserLoading, isAddressPending }) => {
     const address = `${addressData?.streetAddress}, ${addressData?.city}, ${addressData?.state}, ${addressData?.zipCode}`
     return (
         <div>
@@ -25,18 +25,36 @@ const AccountDetailsTab = ({ user, setActiveTab, addressData, isAddressPending }
                 <div className="flex items-start gap-8">
                     <span className="font-medium min-w-[120px]">Login Details:</span>
                     <div className="space-y-6 flex-1">
-                        <p className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1">
                             <span className="font-medium text-xs">Full Name</span>
-                            <span className="font-medium text-sm text-title">{user.fullName}</span>
-                        </p>
-                        <p className="flex flex-col gap-1">
+                            {
+                                isUserLoading ? (
+                                    <Skeleton className="h-3 w-1/5" />
+                                ) : (
+                                    <span className="font-medium text-sm text-title">{user.fullName}</span>
+                                )
+                            }
+                        </div>
+                        <div className="flex flex-col gap-1">
                             <span className="font-medium text-xs">Email</span>
-                            <span className="font-medium text-sm text-title">{user.email}</span>
-                        </p>
-                        <p className="flex flex-col gap-1">
+                            {
+                                isUserLoading ? (
+                                    <Skeleton className="h-3 w-1/3" />
+                                ) : (
+                                    <span className="font-medium text-sm text-title">{user.email}</span>
+                                )
+                            }
+                        </div>
+                        <div className="flex flex-col gap-1">
                             <span className="font-medium text-xs">Phone Number</span>
-                            <span className="font-medium text-sm text-title">{user.phoneNumber || "No phone number provided"}</span>
-                        </p>
+                            {
+                                isUserLoading ? (
+                                    <Skeleton className="h-3 w-1/4" />
+                                ) : (
+                                    <span className="font-medium text-sm text-title">{user.phoneNumber || "No phone number provided"}</span>
+                                )
+                            }
+                        </div>
                     </div>
                 </div>
 
@@ -65,7 +83,7 @@ const AccountDetailsTab = ({ user, setActiveTab, addressData, isAddressPending }
                             isAddressPending ? (
                                 <div className="flex flex-col gap-1">
                                     <Skeleton className="h-3 w-1/2" />
-                                    <Skeleton className="h-3 w-1/2" />
+                                    <Skeleton className="h-3 w-1/4" />
                                 </div>
                             ) : (
                                 <span className="text-xs text-subtitle max-w-2/3">{address || "No address provided"}</span>

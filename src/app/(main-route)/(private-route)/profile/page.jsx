@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
 
     // Get Current User
-    const { user: currentUser } = useGetMe()
+    const { user: currentUser, isPending: isUserLoading } = useGetMe()
     const user = {
         fullName: currentUser?.fullName,
         email: currentUser?.email,
@@ -117,6 +117,7 @@ const ProfilePage = () => {
             case "accountDetails":
                 return <AccountDetailsTab
                     user={user}
+                    isUserLoading={isUserLoading}
                     addressData={addressData}
                     setActiveTab={setActiveTab}
                     isAddressPending={isAddressPending}

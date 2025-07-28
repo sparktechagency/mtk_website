@@ -1,12 +1,18 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
-const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) => {
+const EditProfileTab = ({ user, setActiveTab, handleUpdateProfile, isProfilePending }) => {
+    const [editableData, setEditableData] = useState({
+        fullName: user.fullName,
+        phoneNumber: user.phoneNumber
+    })
+
     return (
         <div>
             <h2 className="text-xl medium text-title mb-6">Edit Profile</h2>
@@ -16,10 +22,8 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                     <Input
                         id="fullName"
                         placeholder="Full Name"
-                        value={editableProfile.fullName}
-                        onChange={(e) =>
-                            setEditableProfile({ ...editableProfile, fullName: e.target.value })
-                        }
+                        value={editableData.fullName}
+                        onChange={(e) => setEditableData({ ...editableData, fullName: e.target.value })}
                         className="text-base h-10"
                     />
                 </div>
@@ -28,8 +32,7 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                     <Input
                         id="email"
                         placeholder="Email"
-                        
-                        value={editableProfile.email}
+                        value={user.email}
                         disabled
                         className="text-base h-10"
                     />
@@ -38,11 +41,10 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                     <Label htmlFor="phone" className="text-subtitle mb-3">Phone Number</Label>
                     <Input
                         id="phone"
+                        type="tel"
                         placeholder="Phone Number"
-                        value={editableProfile.phone}
-                        onChange={(e) =>
-                            setEditableProfile({ ...editableProfile, phone: e.target.value })
-                        }
+                        value={editableData.phoneNumber}
+                        onChange={(e) => setEditableData({ ...editableData, phoneNumber: e.target.value })}
                         className="text-base h-10"
                     />
                 </div>
@@ -51,9 +53,10 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                         variant="outline"
                         onClick={() => setActiveTab("accountDetails")}
                     >
-                        Cancel
+                        Back
                     </Button>
-                    <Button>
+                    <Button className="rounded-xs" onClick={() => handleUpdateProfile(editableData)} disabled={isProfilePending}>
+                        {isProfilePending && <Loader2 className="h-4 w-4 animate-spin" /> }
                         Update
                     </Button>
                 </div>

@@ -2,9 +2,11 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "../ui/skeleton";
 
-const AccountDetailsTab = ({ user, setActiveTab }) => {
+const AccountDetailsTab = ({ user, setActiveTab, addressData, isAddressPending }) => {
+    const address = `${addressData?.streetAddress}, ${addressData?.city}, ${addressData?.state}, ${addressData?.zipCode}`
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
@@ -33,7 +35,7 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                         </p>
                         <p className="flex flex-col gap-1">
                             <span className="font-medium text-xs">Phone Number</span>
-                            <span className="font-medium text-sm text-title">{user.phone || "N/A"}</span>
+                            <span className="font-medium text-sm text-title">{user.phoneNumber || "No phone number provided"}</span>
                         </p>
                     </div>
                 </div>
@@ -57,10 +59,19 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                 {/* Address Book */}
                 <div className="md:flex space-y-3 justify-between items-start gap-8">
                     <span className="font-medium block min-w-[120px]">Address Book:</span>
-                    <p className="flex flex-col gap-1 max-w-xs flex-1">
+                    <div className="flex flex-col gap-1 max-w-xs flex-1">
                         <span className="font-medium text-xs">Shipping Address</span>
-                        <span className="text-xs text-subtitle">{user.address || "No address provided"}</span>
-                    </p>
+                        {
+                            isAddressPending ? (
+                                <div className="flex flex-col gap-1">
+                                    <Skeleton className="h-3 w-1/2" />
+                                    <Skeleton className="h-3 w-1/2" />
+                                </div>
+                            ) : (
+                                <span className="text-xs text-subtitle max-w-2/3">{address || "No address provided"}</span>
+                            )
+                        }
+                    </div>
                     <Button
                         variant="outline"
                         className="text-primary font-normal"

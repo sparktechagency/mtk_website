@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import SimpleHero from "@/components/common/SimpleHero";
 import PageLayout from "@/components/layout/PageLayout";
 import ProfileSidebar from "@/components/profile/ProfileSidebar";
@@ -10,59 +10,87 @@ import EditProfileTab from "@/components/profile/EditProfileTab";
 import ChangePasswordTab from "@/components/profile/ChangePasswordTab";
 import ChangeAddressTab from "@/components/profile/ChangeAddressTab";
 import { useGetMe } from "@/hooks/useGetMe";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "@/api/user/updateProfile";
+import { toast } from "sonner";
+import { updatePassword } from "@/api/user/updatePassword";
+import { getShippingAddress } from "@/api/user/getShippingAddress";
 
 const ProfilePage = () => {
-
-
-    const { user: currentUser } = useGetMe()
-
+    const queryClient = useQueryClient();
     const heroLinks = [
         { name: "Home", href: "/" },
         { name: "Profile", isCurrent: true },
     ];
-
     const [activeTab, setActiveTab] = useState("accountDetails");
-    // const [showPassword, setShowPassword] = useState(false);
 
+
+    // Get Current User
+    const { user: currentUser } = useGetMe()
     const user = {
         fullName: currentUser?.fullName,
         email: currentUser?.email,
         phoneNumber: currentUser?.phone,
-        address: "2118 Thornridge Cir. Syracuse, Connecticut 35624",
     };
 
-    // State for editable profile fields
-    const [editableProfile, setEditableProfile] = useState({
-        fullName: currentUser?.fullName,
-        email: currentUser?.email,
-        phoneNumber: currentUser?.phone,
-    });
-
-    // State for password change fields
-    const [passwordFields, setPasswordFields] = useState({
-        currentPassword: "",
-        newPassword: "",
-        confirmNewPassword: "",
-    });
-
-    const parseAddress = (addressString) => {
-        if (!addressString || typeof addressString !== 'string') {
-            return { streetAddress: "", city: "", state: "", zipCode: "" };
+    // Update Profile
+    const { mutate: mutateProfile, isPending: isProfilePending } = useMutation({
+        mutationFn: updateProfile,
+        onSuccess: () => {
+            toast.success("Profile updated successfully.");
+            queryClient.invalidateQueries({ queryKey: ["user"] });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to update profile.");
         }
-        const parts = addressString.split(',').map(part => part.trim());
-        return {
-            streetAddress: parts[0] || "",
-            city: parts[1] || "",
-            state: (parts[2] && parts[2].split(' ')[0]) || "",
-            zipCode: (parts[2] && parts[2].split(' ')[1]) || "",
-        };
-    };
+    })
+    // Update Password
+    const { mutate: mutatePassword, isPending: isPasswordPending } = useMutation({
+        mutationFn: updatePassword,
+        onSuccess: () => {
+            toast.success("Password updated successfully.");
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to update password.");
+        }
+    })
 
-    const [addressFields, setAddressFields] = useState(parseAddress(user.address));
+    // Get Address
+    const { data: addressData, isPending: isAddressPending } = useQuery({
+        queryKey: ["shipping-address"],
+        queryFn: getShippingAddress,
+    })
 
+    // Update Profile
+    const handleUpdateProfile = (data) => {
+        if (!data.phoneNumber?.trim()) {
+            toast.error("Phone number is required.");
+            return;
+        }
+        const profileData = {
+            fullName: data?.fullName,
+            phone: data?.phoneNumber
+        }
+        mutateProfile(profileData)
+    }
+    // Update Password
+    const handleUpdatePassword = (data) => {
+        const { currentPassword, newPassword, confirmNewPassword } = data;
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            toast.error("All fields are required.");
+            return;
+        }
 
-
+        if (newPassword !== confirmNewPassword) {
+            toast.error("New passwords do not match.");
+            return;
+        }
+        const password = {
+            currentPassword,
+            newPassword
+        }
+        mutatePassword(password)
+    }
 
 
 
@@ -72,28 +100,33 @@ const ProfilePage = () => {
     const renderTabContent = () => {
         switch (activeTab) {
             case "accountDetails":
-                return <AccountDetailsTab user={user} setActiveTab={setActiveTab} />;
+                return <AccountDetailsTab
+                    user={user}
+                    addressData={addressData}
+                    setActiveTab={setActiveTab}
+                    isAddressPending={isAddressPending}
+                />;
             case "editProfile":
                 return (
                     <EditProfileTab
-                        editableProfile={editableProfile}
-                        setEditableProfile={setEditableProfile} 
+                        user={user}
                         setActiveTab={setActiveTab}
+                        handleUpdateProfile={handleUpdateProfile}
+                        isProfilePending={isProfilePending}
                     />
                 );
             case "changePassword":
                 return (
                     <ChangePasswordTab
-                        passwordFields={passwordFields}
-                        setPasswordFields={setPasswordFields}
+                        handleUpdatePassword={handleUpdatePassword}
                         setActiveTab={setActiveTab}
+                        isPasswordPending={isPasswordPending}
                     />
                 );
             case "changeAddress":
                 return (
                     <ChangeAddressTab
-                        addressFields={addressFields}
-                        setAddressFields={setAddressFields}
+                        addressData={addressData}
                         setActiveTab={setActiveTab}
                     />
                 );

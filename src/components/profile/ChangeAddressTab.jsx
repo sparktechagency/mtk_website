@@ -1,12 +1,19 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/label"; 
 
-const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => {
+const ChangeAddressTab = ({ addressData, setActiveTab }) => {
+
+    const [addressFields, setAddressFields] = useState({
+        streetAddress: addressData?.streetAddress,
+        city: addressData?.city,
+        state: addressData?.state,
+        zipCode: addressData?.zipCode
+    })
     return (
         <div>
             <h2 className="text-xl font-medium text-title mb-6">Shipping Address</h2>
@@ -16,7 +23,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                     <Input
                         id="streetAddress"
                         placeholder="Street Address"
-                        value={addressFields.streetAddress}
+                        value={addressFields?.streetAddress}
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, streetAddress: e.target.value })
                         }
@@ -28,7 +35,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                     <Input
                         id="city"
                         placeholder="City"
-                        value={addressFields.city}
+                        value={addressFields?.city}
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, city: e.target.value })
                         }
@@ -40,7 +47,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                     <Input
                         id="state"
                         placeholder="State"
-                        value={addressFields.state}
+                        value={addressFields?.state}
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, state: e.target.value })
                         }
@@ -52,7 +59,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                     <Input
                         id="zipCode"
                         placeholder="Zip Code"
-                        value={addressFields.zipCode}
+                        value={addressFields?.zipCode}
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, zipCode: e.target.value })
                         }
@@ -67,7 +74,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                     >
                         Cancel
                     </Button>
-                    <Button className="">
+                    <Button>
                         Update
                     </Button>
                 </div>

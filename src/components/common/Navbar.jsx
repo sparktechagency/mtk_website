@@ -16,10 +16,10 @@ import { useGetMe } from "@/hooks/useGetMe";
 
 const Navbar = () => {
     const { setTheme } = useTheme()
-    const token = useAuthStore((state) => state.token);
-    const clearToken = useAuthStore((state) => state.clearToken);
+    const token = useAuthStore.getState().token;
+    const clearToken = useAuthStore.getState().clearToken;
 
-    const { user, isUserPending } = useGetMe()
+    const { user, isLoading } = useGetMe();
 
     const isLoggedIn = !!token && !!user;
     const userName = user?.fullName || "Guest";
@@ -33,6 +33,11 @@ const Navbar = () => {
         { name: "Contact Us", href: "/contact" },
         { name: "Help", href: "/help" },
     ];
+
+    const handleLogOut = () => {
+        clearToken();
+        window.location.href = "/auth/login";
+    }
 
     return (
         <nav className="h-[81px]">
@@ -158,7 +163,7 @@ const Navbar = () => {
                                             <User className="h-5 w-5 text-subtitle" />
                                             <span className="sr-only">Profile</span>
                                         </Button>
-                                        {isUserPending ? (
+                                        {isLoading ? (
                                             <div className="flex items-center gap-1">
                                                 <Skeleton className="h-4 w-23" />
                                                 <Skeleton className="h-4 w-4" />
@@ -190,7 +195,7 @@ const Navbar = () => {
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                             </Link>
-                                            <DropdownMenuItem onClick={() => clearToken()} className={"cursor-pointer"}>
+                                            <DropdownMenuItem onClick={handleLogOut} className={"cursor-pointer"}>
                                                 <LogOut className="mr-2 h-4 w-4 text-red-500" />
                                                 <span className="text-red-500">Logout</span>
                                             </DropdownMenuItem>

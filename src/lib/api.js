@@ -31,7 +31,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
-      useAuthStore((state) => state.clearToken);
+      console.log(error);
+      useAuthStore.getState().clearToken();
       window.location.href = "/auth/login";
     }
     return Promise.reject(error);

@@ -23,7 +23,7 @@ const FAQ = () => {
             <PageLayout>
                 <div className="mb-8">
                     <h2 className="text-xl text-title font-medium mb-2">Welcome to our FAQ section!</h2>
-                    <p className="text-subtitle text-sm">Here, you'll find answers to common questions about orders, shipping and returns. If you need further assistance, feel free to <Link className="underline text-blue-600" href="/contact">contact us</Link>   .</p>
+                    <p className="text-subtitle text-sm">Here,  find answers to common questions about orders, shipping and returns. If you need further assistance, feel free to <Link className="underline text-blue-600" href="/contact">contact us</Link>   .</p>
                 </div>
                 {/* Accordion */}
                 <div className="max-w-4xl mx-auto">

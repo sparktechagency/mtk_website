@@ -25,7 +25,7 @@ const initialOrderItems = [
 ];
 
 const CheckOutPage = () => {
-    const [orderItems, setOrderItems] = useState(initialOrderItems);
+    const [orderItems] = useState(initialOrderItems);
     const [shippingAddress, setShippingAddress] = useState({
         street: "",
         city: "",

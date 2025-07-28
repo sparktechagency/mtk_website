@@ -18,14 +18,14 @@ const TermsPage = () => {
                 <div>
                     {/* Introductory Paragraph */}
                     <p className="text-base text-subtitle mb-8">
-                        Welcome to [Your Store Name]! By accessing or using our website (the "Site"), you agree to be bound by the following Terms and Conditions. Please read them carefully.
+                        Welcome to [Your Store Name]! By accessing or using our website  you agree to be bound by the following Terms and Conditions. Please read them carefully.
                     </p>
 
                     {/* 1. General Section */}
                     <div className="mb-10">
                         <h3 className="font-semibold text-title/90 mb-4">1. General</h3>
                         <p className="text-base text-subtitle">
-                            This website is operated by [Your Business Name]. Throughout the site, the terms "we", "us", and "our" refer to the store. By visiting or purchasing from our store, you agree to accept these terms, including any additional policies referenced herein.
+                            This website is operated by [Your Business Name]. Throughout the site, the terms refer to the store. By visiting or purchasing from our store, you agree to accept these terms, including any additional policies referenced herein.
                         </p>
                     </div>
 
@@ -114,7 +114,7 @@ const TermsPage = () => {
                     <div className="mb-10">
                         <h3 className="font-semibold text-title/90 mb-4">10. Changes to Terms</h3>
                         <p className="text-base text-subtitle">
-                            We reserve the right to update these Terms and Conditions at any time. Changes will be posted on this page with a revised "Effective Date."
+                            We reserve the right to update these Terms and Conditions at any time. Changes will be posted on this page with a revised Effective Date.
                         </p>
                     </div>
                 </div>

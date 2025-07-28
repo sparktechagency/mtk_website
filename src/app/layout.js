@@ -1,7 +1,6 @@
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { Poltawski_Nowy } from "next/font/google";
+import { Poppins, Poltawski_Nowy } from "next/font/google";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import QueryProvider from "@/components/provider/query-provider";
 import { Toaster } from "@/components/ui/sonner";

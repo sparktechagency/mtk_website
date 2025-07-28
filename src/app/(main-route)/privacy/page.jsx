@@ -109,7 +109,7 @@ const PrivacyPage = () => {
 
                     {/* 8. Children's Privacy Section */}
                     <div className="mb-10">
-                        <h3 className=" font-semibold text-title/90 mb-4">8. Children's Privacy</h3>
+                        <h3 className=" font-semibold text-title/90 mb-4">8. Childrens Privacy</h3>
                         <p className="text-base text-subtitle">
                             Our website is not intended for children under the age of 13. We do not knowingly collect data from minors.
                         </p>

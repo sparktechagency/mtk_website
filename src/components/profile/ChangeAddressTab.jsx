@@ -5,8 +5,9 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"; 
+import { Loader2 } from "lucide-react";
 
-const ChangeAddressTab = ({ addressData, setActiveTab }) => {
+const ChangeAddressTab = ({ addressData, setActiveTab, handleUpdateAddress, isAddressUpdatePending }) => {
 
     const [addressFields, setAddressFields] = useState({
         streetAddress: addressData?.streetAddress,
@@ -74,7 +75,8 @@ const ChangeAddressTab = ({ addressData, setActiveTab }) => {
                     >
                         Cancel
                     </Button>
-                    <Button>
+                    <Button disabled={isAddressUpdatePending} onClick={() => handleUpdateAddress(addressFields)}>
+                        { isAddressUpdatePending && <Loader2 className="h-4 w-4 animate-spin" /> }
                         Update
                     </Button>
                 </div>

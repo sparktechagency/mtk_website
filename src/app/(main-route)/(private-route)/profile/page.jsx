@@ -15,6 +15,7 @@ import { updateProfile } from "@/api/user/updateProfile";
 import { toast } from "sonner";
 import { updatePassword } from "@/api/user/updatePassword";
 import { getShippingAddress } from "@/api/user/getShippingAddress";
+import { updateShippingAddress } from "@/api/user/updateShippingAddress";
 
 const ProfilePage = () => {
     const queryClient = useQueryClient();
@@ -61,6 +62,18 @@ const ProfilePage = () => {
         queryFn: getShippingAddress,
     })
 
+    // Update Address
+    const {mutate: mutateAddress, isPending: isAddressUpdatePending} = useMutation({
+        mutationFn: updateShippingAddress,
+        onSuccess: () => {
+            toast.success("Address updated successfully.");
+            queryClient.invalidateQueries({ queryKey: ["shipping-address"] });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to update address.");
+        }
+    })
+
     // Update Profile
     const handleUpdateProfile = (data) => {
         if (!data.phoneNumber?.trim()) {
@@ -92,7 +105,9 @@ const ProfilePage = () => {
         mutatePassword(password)
     }
 
-
+    const handleUpdateAddress = (data) => {
+        mutateAddress(data)
+    }
 
 
 
@@ -128,6 +143,8 @@ const ProfilePage = () => {
                     <ChangeAddressTab
                         addressData={addressData}
                         setActiveTab={setActiveTab}
+                        handleUpdateAddress={handleUpdateAddress}
+                        isAddressUpdatePending={isAddressUpdatePending}
                     />
                 );
             default:

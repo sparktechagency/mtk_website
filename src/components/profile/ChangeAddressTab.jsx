@@ -20,7 +20,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, streetAddress: e.target.value })
                         }
-                        className="h-10 text-base rounded-xs"
+                        className="h-10 text-base "
                     />
                 </div>
                 <div>
@@ -32,7 +32,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, city: e.target.value })
                         }
-                        className="h-10 text-base rounded-xs"
+                        className="h-10 text-base "
                     />
                 </div>
                 <div>
@@ -44,7 +44,7 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, state: e.target.value })
                         }
-                        className="h-10 text-base rounded-xs"
+                        className="h-10 text-base "
                     />
                 </div>
                 <div>
@@ -56,18 +56,18 @@ const ChangeAddressTab = ({ addressFields, setAddressFields, setActiveTab }) => 
                         onChange={(e) =>
                             setAddressFields({ ...addressFields, zipCode: e.target.value })
                         }
-                        className="h-10 text-base rounded-xs"
+                        className="h-10 text-base "
                     />
                 </div>
                 <div className="flex justify-end gap-4 mt-6">
                     <Button
                         variant="outline"
-                        className="rounded-xs"
+                        className=""
                         onClick={() => setActiveTab("accountDetails")}
                     >
                         Cancel
                     </Button>
-                    <Button className="rounded-xs">
+                    <Button className="">
                         Update
                     </Button>
                 </div>

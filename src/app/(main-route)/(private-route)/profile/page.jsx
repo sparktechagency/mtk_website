@@ -9,28 +9,34 @@ import AccountDetailsTab from "@/components/profile/AccountDetailsTab";
 import EditProfileTab from "@/components/profile/EditProfileTab";
 import ChangePasswordTab from "@/components/profile/ChangePasswordTab";
 import ChangeAddressTab from "@/components/profile/ChangeAddressTab";
+import { useGetMe } from "@/hooks/useGetMe";
+
 
 const ProfilePage = () => {
+
+
+    const { user: currentUser } = useGetMe()
+
     const heroLinks = [
         { name: "Home", href: "/" },
         { name: "Profile", isCurrent: true },
     ];
 
     const [activeTab, setActiveTab] = useState("accountDetails");
-    const [showPassword, setShowPassword] = useState(false);
+    // const [showPassword, setShowPassword] = useState(false);
 
     const user = {
-        fullName: "Leslie Alexander",
-        email: "debra.holt@example.com",
-        phoneNumber: "(208) 555-0112",
+        fullName: currentUser?.fullName,
+        email: currentUser?.email,
+        phoneNumber: currentUser?.phone,
         address: "2118 Thornridge Cir. Syracuse, Connecticut 35624",
     };
 
     // State for editable profile fields
     const [editableProfile, setEditableProfile] = useState({
-        fullName: user.fullName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
+        fullName: currentUser?.fullName,
+        email: currentUser?.email,
+        phoneNumber: currentUser?.phone,
     });
 
     // State for password change fields
@@ -55,6 +61,14 @@ const ProfilePage = () => {
 
     const [addressFields, setAddressFields] = useState(parseAddress(user.address));
 
+
+
+
+
+
+
+
+
     const renderTabContent = () => {
         switch (activeTab) {
             case "accountDetails":
@@ -63,7 +77,7 @@ const ProfilePage = () => {
                 return (
                     <EditProfileTab
                         editableProfile={editableProfile}
-                        setEditableProfile={setEditableProfile}
+                        setEditableProfile={setEditableProfile} 
                         setActiveTab={setActiveTab}
                     />
                 );

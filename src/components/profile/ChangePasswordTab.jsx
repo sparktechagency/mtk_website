@@ -25,7 +25,7 @@ const ChangePasswordTab = ({ passwordFields, setPasswordFields, setActiveTab }) 
                             onChange={(e) =>
                                 setPasswordFields({ ...passwordFields, currentPassword: e.target.value })
                             }
-                            className="h-10 text-base rounded-xs pr-10"
+                            className="h-10 text-base  pr-10"
                         />
                         <span
                             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-subtitle"
@@ -46,7 +46,7 @@ const ChangePasswordTab = ({ passwordFields, setPasswordFields, setActiveTab }) 
                             onChange={(e) =>
                                 setPasswordFields({ ...passwordFields, newPassword: e.target.value })
                             }
-                            className="h-10 text-base rounded-xs pr-10"
+                            className="h-10 text-base  pr-10"
                         />
                         <span
                             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-subtitle"
@@ -67,7 +67,7 @@ const ChangePasswordTab = ({ passwordFields, setPasswordFields, setActiveTab }) 
                             onChange={(e) =>
                                 setPasswordFields({ ...passwordFields, confirmNewPassword: e.target.value })
                             }
-                            className="h-10 text-base rounded-xs pr-10"
+                            className="h-10 text-base  pr-10"
                         />
                         <span
                             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-subtitle"
@@ -80,12 +80,12 @@ const ChangePasswordTab = ({ passwordFields, setPasswordFields, setActiveTab }) 
                 <div className="flex justify-end gap-4 mt-6">
                     <Button
                         variant="outline"
-                        className="rounded-xs"
+                        className=""
                         onClick={() => setActiveTab("accountDetails")}
                     >
                         Cancel
                     </Button>
-                    <Button className=" rounded-xs">
+                    <Button className=" ">
                         Change Password
                     </Button>
                 </div>

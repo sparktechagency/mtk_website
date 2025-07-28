@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; 
 
 const AccountDetailsTab = ({ user, setActiveTab }) => {
     return (
@@ -11,7 +11,7 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                 <h2 className="text-xl font-medium text-title">Account Details</h2>
                 <Button
                     variant="outline"
-                    className="text-primary rounded-xs font-normal"
+                    className="text-primary font-normal"
                     onClick={() => setActiveTab("editProfile")}
                 >
                     Edit Account
@@ -33,7 +33,7 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                         </p>
                         <p className="flex flex-col gap-1">
                             <span className="font-medium text-xs">Phone Number</span>
-                            <span className="font-medium text-sm text-title">{user.phoneNumber}</span>
+                            <span className="font-medium text-sm text-title">{user.phone || "N/A"}</span>
                         </p>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                     </div>
                     <Button
                         variant="outline"
-                        className="text-primary rounded-xs font-normal"
+                        className="text-primary font-normal"
                         onClick={() => setActiveTab("changePassword")}
                     >
                         Change Password
@@ -63,7 +63,7 @@ const AccountDetailsTab = ({ user, setActiveTab }) => {
                     </p>
                     <Button
                         variant="outline"
-                        className="text-primary rounded-xs font-normal"
+                        className="text-primary font-normal"
                         onClick={() => setActiveTab("changeAddress")}
                     >
                         Change Address

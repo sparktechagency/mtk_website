@@ -20,7 +20,7 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                         onChange={(e) =>
                             setEditableProfile({ ...editableProfile, fullName: e.target.value })
                         }
-                        className="text-base h-10 rounded-xs"
+                        className="text-base h-10"
                     />
                 </div>
                 <div>
@@ -28,34 +28,32 @@ const EditProfileTab = ({ editableProfile, setEditableProfile, setActiveTab }) =
                     <Input
                         id="email"
                         placeholder="Email"
+                        
                         value={editableProfile.email}
-                        onChange={(e) =>
-                            setEditableProfile({ ...editableProfile, email: e.target.value })
-                        }
-                        className="text-base h-10 rounded-xs"
+                        disabled
+                        className="text-base h-10"
                     />
                 </div>
                 <div>
-                    <Label htmlFor="phoneNumber" className="text-subtitle mb-3">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-subtitle mb-3">Phone Number</Label>
                     <Input
-                        id="phoneNumber"
+                        id="phone"
                         placeholder="Phone Number"
-                        value={editableProfile.phoneNumber}
+                        value={editableProfile.phone}
                         onChange={(e) =>
-                            setEditableProfile({ ...editableProfile, phoneNumber: e.target.value })
+                            setEditableProfile({ ...editableProfile, phone: e.target.value })
                         }
-                        className="text-base h-10 rounded-xs"
+                        className="text-base h-10"
                     />
                 </div>
                 <div className="flex justify-end gap-4 mt-6">
                     <Button
                         variant="outline"
-                        className="rounded-xs"
                         onClick={() => setActiveTab("accountDetails")}
                     >
                         Cancel
                     </Button>
-                    <Button className="rounded-xs">
+                    <Button>
                         Update
                     </Button>
                 </div>

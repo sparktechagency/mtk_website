@@ -7,27 +7,21 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Search, Heart, User, ShoppingBag, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, Moon, Sun } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getMe } from "@/api/user/getMe";
 import useAuthStore from "@/store/auth";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetMe } from "@/hooks/useGetMe";
 
 
 const Navbar = () => {
     const { setTheme } = useTheme()
-    const token = useAuthStore((state) => state.token);
     const clearToken = useAuthStore((state) => state.clearToken);
 
-    const { data: user, isPending: isUserPending } = useQuery({
-        queryKey: ["user"],
-        queryFn: getMe,
-        enabled: !!token,
-    });
+    const { user, isUserPending } = useGetMe()
 
-    const isLoggedIn = !!token && !!user;
-    const userName = user?.fullName || "Guest";
+    const isLoggedIn = !!user;
+    const userName = user?.fullName || "Guest User";
     const [showSearchInput, setShowSearchInput] = useState(false);
 
     const pathname = usePathname();

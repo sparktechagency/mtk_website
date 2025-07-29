@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Heart } from "lucide-react";
+import { Star, Heart, Loader2 } from "lucide-react";
 import useAuthStore from "@/store/auth";
+import { useWishlistStore } from "@/store/wishlistStore";
 
-const ShopCard = ({ product, handleWishlistClick }) => {
+const ShopCard = ({ product, favouriteIds, handleWishlistClick }) => {
+
+    const { isLoadingIds } = useWishlistStore();
+    const isThisProductLoading = isLoadingIds.has(product?._id);
 
     const token = useAuthStore.getState().token;
     return (
@@ -24,7 +28,11 @@ const ShopCard = ({ product, handleWishlistClick }) => {
                 {
                     token && (
                         <div className="absolute top-2 right-2 cursor-pointer" onClick={() => handleWishlistClick(product?._id)}>
-                            <Heart className="w-6 h-6 text-primary" />
+                            {isThisProductLoading ? (
+                                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                            ) : (
+                                <Heart className={`w-6 h-6 text-primary ${favouriteIds.includes(product?._id) ? "fill-primary" : ""}`} />
+                            )}
                         </div>
                     )
                 }

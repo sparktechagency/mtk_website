@@ -159,6 +159,12 @@ const ShopPage = () => {
 
     const products = productResponse?.data || [];
     const totalProducts = productResponse?.meta?.total || 0;
+    
+    const { data: favouriteIdsResponse} = useQuery({
+        queryKey: ["favouriteIds"],
+        queryFn: () => api.get("/favourite/get-favourite-ids")
+    })
+    const favouriteIds = favouriteIdsResponse?.data?.data || [];
 
     useEffect(() => {
         if (categoryResponse?.data?.data) {
@@ -237,7 +243,7 @@ const ShopPage = () => {
                             ) : (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                     {products.map((product) => (
-                                        <ShopCard key={product._id} product={product} handleWishlistClick={handleWishlistClick} />
+                                        <ShopCard key={product._id} product={product} favouriteIds={favouriteIds} handleWishlistClick={handleWishlistClick} />
                                     ))}
                                 </div>
                             )

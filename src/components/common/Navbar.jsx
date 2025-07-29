@@ -36,7 +36,7 @@ const Navbar = () => {
 
     const handleLogOut = () => {
         clearToken();
-        window.location.href = "/auth/login";
+        // window.location.href = "/auth/login";
     }
 
     return (

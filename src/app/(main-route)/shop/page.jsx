@@ -14,8 +14,7 @@ import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
 import MobileFilter from "@/components/shop/MobileFilter";
 import DesktopFilter from "@/components/shop/DesktopFilter";
 import ShopCard from "@/components/shop/ShopCard";
-import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -27,10 +26,12 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 import Lottie from "lottie-react";
-
-
+import { useWishlistStore } from "@/store/wishlistStore";
 
 const ShopPage = () => {
+
+    const { toggleFavouriteProduct } = useWishlistStore();
+    const queryClient = useQueryClient();
 
     // State for price range inputs and slider
     const [priceRange, setPriceRange] = useState([0, 500]);
@@ -112,10 +113,8 @@ const ShopPage = () => {
         }
     };
 
-    const handleWishlistClick = (e, productId) => {
-        e.stopPropagation();
-        // Add your wishlist logic here
-        toast.success(`Product ${productId} added to wishlist`);
+    const handleWishlistClick = (productId) => {
+        toggleFavouriteProduct(productId, queryClient);
     };
 
     // Fetch category

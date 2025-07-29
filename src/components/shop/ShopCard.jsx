@@ -23,7 +23,7 @@ const ShopCard = ({ product, handleWishlistClick }) => {
                 </Link>
                 {
                     token && (
-                        <div className="absolute top-2 right-2 cursor-pointer" onClick={(e) => handleWishlistClick(e, product?.name)}>
+                        <div className="absolute top-2 right-2 cursor-pointer" onClick={() => handleWishlistClick(product?._id)}>
                             <Heart className="w-6 h-6 text-primary" />
                         </div>
                     )

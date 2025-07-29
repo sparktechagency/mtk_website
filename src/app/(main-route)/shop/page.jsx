@@ -224,11 +224,17 @@ const ShopPage = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {products.map((product) => (
-                                    <ShopCard key={product._id} product={product} handleWishlistClick={handleWishlistClick} />
-                                ))}
-                            </div>
+                            products.length === 0 ? (
+                                <div className="text-center text-subtitle text-lg col-span-full">
+                                    No products found.
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {products.map((product) => (
+                                        <ShopCard key={product._id} product={product} handleWishlistClick={handleWishlistClick} />
+                                    ))}
+                                </div>
+                            )
                         )}
                         {totalProducts > limit && (
                             <div className="mt-8">

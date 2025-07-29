@@ -10,7 +10,7 @@ import { Loader2 } from "lucide-react";
 const EditProfileTab = ({ user, setActiveTab, handleUpdateProfile, isProfilePending }) => {
     const [editableData, setEditableData] = useState({
         fullName: user.fullName,
-        phoneNumber: user.phoneNumber
+        phoneNumber: user.phoneNumber 
     })
 
     return (
@@ -56,8 +56,7 @@ const EditProfileTab = ({ user, setActiveTab, handleUpdateProfile, isProfilePend
                         Back
                     </Button>
                     <Button className="rounded-xs" onClick={() => handleUpdateProfile(editableData)} disabled={isProfilePending}>
-                        {isProfilePending && <Loader2 className="h-4 w-4 animate-spin" /> }
-                        Update
+                        {isProfilePending ? <><Loader2 className="h-4 w-4 animate-spin" /> Updating</>: "Update"}
                     </Button>
                 </div>
             </div>

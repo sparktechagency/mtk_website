@@ -13,11 +13,13 @@ const Hero = () => {
     >
       {/* Dark overlay for better text readability */}
       <div
-        className="absolute inset-0 z-10"
+        className="absolute w-2/3 h-5/6 z-10 rounded-full blur-3xl pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, #0000007b, #14303856)',
-        }}>
-      </div>
+          background: 'linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(27, 25, 3, 0.226))',
+          // mixBlendMode: 'screen',
+        }}
+      ></div>
+
 
 
       {/* Content above the overlay */}

@@ -96,8 +96,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                         Cancel
                     </Button>
                     <Button disabled={isPasswordPending} onClick={()=>handleUpdatePassword(passwordFields)}>
-                        {isPasswordPending && <Loader2 className="h-4 w-4 animate-spin" /> }
-                        Change Password
+                        {isPasswordPending ? <><Loader2 className="h-4 w-4 animate-spin" /> Updating</> : "Change Password"}
                     </Button>
                 </div>
             </div>

@@ -76,8 +76,7 @@ const ChangeAddressTab = ({ addressData, setActiveTab, handleUpdateAddress, isAd
                         Cancel
                     </Button>
                     <Button disabled={isAddressUpdatePending} onClick={() => handleUpdateAddress(addressFields)}>
-                        { isAddressUpdatePending && <Loader2 className="h-4 w-4 animate-spin" /> }
-                        Update
+                        {isAddressUpdatePending ? <><Loader2 className="h-4 w-4 animate-spin" /> Updating</> : "Update"}
                     </Button>
                 </div>
             </div>

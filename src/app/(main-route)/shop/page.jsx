@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import emptyAnimation from "../../../../public/lottie/empty.json";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -25,6 +26,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import Lottie from "lottie-react";
 
 
 
@@ -225,8 +227,9 @@ const ShopPage = () => {
                             </div>
                         ) : (
                             products.length === 0 ? (
-                                <div className="text-center text-subtitle text-lg col-span-full">
-                                    No products found.
+                                <div className="flex flex-col gap-2 items-center justify-center h-[50%] text-subtitle text-lg col-span-full">
+                                    <Lottie animationData={emptyAnimation} loop={true} style={{ width: 400, height: 400,}} />
+                                    <p>No products found</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">

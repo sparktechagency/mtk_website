@@ -32,7 +32,7 @@ const ShopPage = () => {
 
     // State for price range inputs and slider
     const [priceRange, setPriceRange] = useState([0, 500]);
-    const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 2500]);
+    const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 500]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -142,14 +142,15 @@ const ShopPage = () => {
                 params.append("stockStatus", selectedAvailability);
             }
 
-            params.append("fromPrice", debouncedPriceRange[0]);
-            params.append("toPrice", debouncedPriceRange[1]);
+            if (debouncedPriceRange[0] !== 0 || debouncedPriceRange[1] !== 500) {
+                params.append("fromPrice", debouncedPriceRange[0]);
+                params.append("toPrice", debouncedPriceRange[1]);
+            }
 
             if (selectedRating > 0) {
                 params.append("ratings", selectedRating);
             }
             
-            // console.log("Fetching products with params:", params.toString());
             const response = await api.get(`/product/get-user-products?${params.toString()}`);
             return response.data;
         }

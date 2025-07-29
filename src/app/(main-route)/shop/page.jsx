@@ -152,7 +152,7 @@ const ShopPage = () => {
             if (selectedRating > 0) {
                 params.append("ratings", selectedRating);
             }
-            
+
             const response = await api.get(`/product/get-user-products?${params.toString()}`);
             return response.data;
         }
@@ -181,7 +181,7 @@ const ShopPage = () => {
                     {/* for mobile */}
                     <div className="flex items-center gap-4">
                         {/* Mobile Filter Trigger */}
-                        <MobileFilter {...{categories,categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }} />
+                        <MobileFilter {...{ categories, categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }} />
 
                         {/* Desktop Search */}
                         <div className="relative hidden md:block">
@@ -208,13 +208,17 @@ const ShopPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-7 gap-6 min-h-screen mt-4">
                     {/* Desktop Filter Column (md:col-span-2) */}
-                    <DesktopFilter {...{categories,categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }} />
+                    <DesktopFilter {...{ categories, categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }} />
 
                     {/* Right Content Column (md:col-span-5) */}
                     <div className="md:col-span-5">
-                        <div className="text-subtitle mb-4">
-                            Showing {totalProducts} results
-                        </div>
+                        {
+                            products.length > 0 && (
+                                <div className="text-subtitle mb-4">
+                                    Showing {totalProducts} results
+                                </div>
+                            )
+                        }
                         {productLoading ? (
                             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {Array.from({ length: limit }).map((_, index) => (
@@ -227,8 +231,8 @@ const ShopPage = () => {
                             </div>
                         ) : (
                             products.length === 0 ? (
-                                <div className="flex flex-col gap-2 items-center justify-center h-[50%] text-subtitle text-lg col-span-full">
-                                    <Lottie animationData={emptyAnimation} loop={true} style={{ width: 400, height: 400,}} />
+                                <div className="flex flex-col gap-2 items-center justify-center h-[70%] text-subtitle text-lg col-span-full">
+                                    <Lottie animationData={emptyAnimation} loop={true} style={{ width: 400, height: 400, }} />
                                     <p>No products found</p>
                                 </div>
                             ) : (

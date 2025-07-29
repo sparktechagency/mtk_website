@@ -6,8 +6,10 @@ import { Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "../ui/skeleton";
 
-const DesktopFilter = ({ priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange }) => {
+const DesktopFilter = ({ categories, categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }) => {
+
     return (
         <>
             <div className="hidden md:block md:col-span-2 sticky top-24 h-fit">
@@ -19,36 +21,23 @@ const DesktopFilter = ({ priceRange, selectedRating, handleRatingClick, handleSl
                         <AccordionItem value="category" className="border-b border-gray-200">
                             <AccordionTrigger className="text-lg font-medium text-title hover:no-underline">Category</AccordionTrigger>
                             <AccordionContent className="pt-2 pb-4 space-y-3">
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="pokemon" />
-                                    <label htmlFor="pokemon" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                        Pokémon
-                                    </label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="basketball" />
-                                    <label htmlFor="basketball" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                        Basketball
-                                    </label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="football" />
-                                    <label htmlFor="football" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                        Football
-                                    </label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="baseball" />
-                                    <label htmlFor="baseball" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                        Baseball
-                                    </label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="hockey" />
-                                    <label htmlFor="hockey" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                        Hockey
-                                    </label>
-                                </div>
+                                {categoryLoading ? (
+                                    Array.from({ length: 3 }).map((_, index) => (
+                                        <div key={index} className="flex items-center space-x-3">
+                                            <Skeleton className="h-4 w-4" />
+                                            <Skeleton className="h-4 w-1/3" />
+                                        </div>
+                                    ))
+                                ) : (
+                                    categories.map((category) => (
+                                        <div key={category._id} className="flex items-center space-x-2">
+                                            <Checkbox id={category._id} onCheckedChange={() => handleCategoryChange(category._id)} checked={selectedCategories.includes(category._id)} />
+                                            <label htmlFor={category._id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
+                                                {category.name}
+                                            </label>
+                                        </div>
+                                    ))
+                                )}
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
@@ -58,17 +47,21 @@ const DesktopFilter = ({ priceRange, selectedRating, handleRatingClick, handleSl
                         <AccordionItem value="availability" className="border-b border-gray-200">
                             <AccordionTrigger className="text-lg font-medium text-title hover:no-underline">Availability</AccordionTrigger>
                             <AccordionContent className="pt-2 pb-4 space-y-3">
-                                <RadioGroup defaultValue="comfortable">
+                                <RadioGroup defaultValue="all" onValueChange={handleAvailabilityChange} value={selectedAvailability}>
                                     <div className="flex items-center gap-3">
-                                        <RadioGroupItem value="default" id="r1" />
+                                        <RadioGroupItem value="all" id="r4" />
+                                        <Label htmlFor="r4" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">All</Label>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <RadioGroupItem value="in_stock" id="r1" />
                                         <Label htmlFor="r1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">In Stock</Label>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <RadioGroupItem value="comfortable" id="r2" />
+                                        <RadioGroupItem value="stock_out" id="r2" />
                                         <Label htmlFor="r2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Out of Stock</Label>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <RadioGroupItem value="compact" id="r3" />
+                                        <RadioGroupItem value="up_coming" id="r3" />
                                         <Label htmlFor="r3" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Up Coming</Label>
                                     </div>
                                 </RadioGroup>

@@ -14,8 +14,9 @@ import { Filter, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "../ui/skeleton";
 
-const MobileFilter = ({ priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange }) => {
+const MobileFilter = ({categories, categoryLoading, priceRange, selectedRating, handleRatingClick, handleSliderChange, handleMaxPriceChange, handleMinPriceChange, selectedCategories, selectedAvailability, handleCategoryChange, handleAvailabilityChange }) => {
     return (
         <>
             <div className="md:hidden">
@@ -34,36 +35,23 @@ const MobileFilter = ({ priceRange, selectedRating, handleRatingClick, handleSli
                                 <AccordionItem value="category" className="border-b border-gray-200">
                                     <AccordionTrigger className="text-lg font-medium text-subtitle hover:no-underline">Category</AccordionTrigger>
                                     <AccordionContent className="pt-2 pb-4 space-y-3">
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox id="pokemon-mobile" />
-                                            <label htmlFor="pokemon-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                                Pokémon
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox id="basketball-mobile" />
-                                            <label htmlFor="basketball-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                                Basketball
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox id="football-mobile" />
-                                            <label htmlFor="football-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                                Football
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox id="baseball-mobile" />
-                                            <label htmlFor="baseball-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                                Baseball
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox id="hockey-mobile" />
-                                            <label htmlFor="hockey-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
-                                                Hockey
-                                            </label>
-                                        </div>
+                                        {categoryLoading ? (
+                                            Array.from({ length: 5 }).map((_, index) => (
+                                                <div key={index} className="flex items-center space-x-3">
+                                                    <Skeleton className="h-2 w-2" />
+                                                    <Skeleton className="h-2 w-1/4" />
+                                                </div>
+                                            ))
+                                        ) : (
+                                            categories.map((category) => (
+                                                <div key={category._id} className="flex items-center space-x-2">
+                                                    <Checkbox id={`${category._id}-mobile`} onCheckedChange={() => handleCategoryChange(category._id)} checked={selectedCategories.includes(category._id)} />
+                                                    <label htmlFor={`${category._id}-mobile`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">
+                                                        {category.name}
+                                                    </label>
+                                                </div>
+                                            ))
+                                        )}
                                     </AccordionContent>
                                 </AccordionItem>
                             </Accordion>
@@ -73,18 +61,22 @@ const MobileFilter = ({ priceRange, selectedRating, handleRatingClick, handleSli
                                 <AccordionItem value="availability" className="border-b border-gray-200">
                                     <AccordionTrigger className="text-lg font-medium text-subtitle hover:no-underline">Availability</AccordionTrigger>
                                     <AccordionContent className="pt-2 pb-4 space-y-3">
-                                        <RadioGroup defaultValue="comfortable">
+                                        <RadioGroup defaultValue="all" onValueChange={handleAvailabilityChange} value={selectedAvailability}>
                                             <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="default" id="r1" />
-                                                <Label htmlFor="r1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">In Stock</Label>
+                                                <RadioGroupItem value="all" id="r4-mobile" />
+                                                <Label htmlFor="r4-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">All</Label>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="comfortable" id="r2" />
-                                                <Label htmlFor="r2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Out of Stock</Label>
+                                                <RadioGroupItem value="in_stock" id="r1-mobile" />
+                                                <Label htmlFor="r1-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">In Stock</Label>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="compact" id="r3" />
-                                                <Label htmlFor="r3" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Up Coming</Label>
+                                                <RadioGroupItem value="stock_out" id="r2-mobile" />
+                                                <Label htmlFor="r2-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Out of Stock</Label>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <RadioGroupItem value="up_coming" id="r3-mobile" />
+                                                <Label htmlFor="r3-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Up Coming</Label>
                                             </div>
                                         </RadioGroup>
                                     </AccordionContent>

@@ -22,7 +22,7 @@ const heroLinks = [
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     phone: z.string().min(10, { message: "Phone number must be at least 10 digits" }),
-    message: z.string().min(1, { message: "Message is required" })
+    message: z.string().min(10, { message: "Message must be at least 10 characters" })
 });
 
 const ContactPage = () => {
@@ -91,7 +91,7 @@ const ContactPage = () => {
                                         className="mt-1 "
                                         {...register("email")}
                                     />
-                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                                    {errors.email && <p className="text-red-500 ml-1 mt-1 text-xs">{errors.email.message}</p>}
                                 </div>
                                 <div>
                                     <Label htmlFor="phone" className="text-subtitle">Phone Number</Label>
@@ -102,7 +102,7 @@ const ContactPage = () => {
                                         className="mt-1 "
                                         {...register("phone")}
                                     />
-                                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+                                    {errors.phone && <p className="text-red-500 ml-1 mt-1 text-xs">{errors.phone.message}</p>}
                                 </div>
                                 <div>
                                     <Label htmlFor="message" className="text-subtitle">Message</Label>
@@ -113,7 +113,7 @@ const ContactPage = () => {
                                         className="mt-1 "
                                         {...register("message")}
                                     />
-                                    {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
+                                    {errors.message && <p className="text-red-500 ml-1 mt-1 text-xs">{errors.message.message}</p>}
                                 </div>
                                 <Button
                                     disabled={isPending}

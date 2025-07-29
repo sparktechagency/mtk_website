@@ -29,14 +29,15 @@ import {
 
 
 const ShopPage = () => {
+
     // State for price range inputs and slider
-    const [priceRange, setPriceRange] = useState([50, 2500]);
-    const [debouncedPriceRange, setDebouncedPriceRange] = useState([50, 2500]);
+    const [priceRange, setPriceRange] = useState([0, 500]);
+    const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 2500]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedPriceRange(priceRange);
-        }, 1000);
+        }, 600);
 
         return () => {
             clearTimeout(handler);
@@ -50,7 +51,9 @@ const ShopPage = () => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     // State for selected availability
     const [selectedAvailability, setSelectedAvailability] = useState("all");
+    // State for search
     const [searchTerm, setSearchTerm] = useState("");
+    // State for debounced search
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
     useEffect(() => {
@@ -63,7 +66,7 @@ const ShopPage = () => {
         };
     }, [searchTerm]);
     const [page, setPage] = useState(1);
-    const [limit] = useState(9);
+    const [limit] = useState(12);
 
     // Handle category change
     const handleCategoryChange = (categoryId) => {
@@ -120,7 +123,7 @@ const ShopPage = () => {
     })
 
 
-    const { data: productResponse, isLoading: productLoading, isError: productError } = useQuery({
+    const { data: productResponse, isLoading: productLoading } = useQuery({
         queryKey: ["products", debouncedSearchTerm, page, limit, selectedCategories, selectedAvailability, debouncedPriceRange, selectedRating],
         queryFn: async () => {
             const params = new URLSearchParams();
@@ -146,13 +149,13 @@ const ShopPage = () => {
                 params.append("ratings", selectedRating);
             }
             
-            console.log("Fetching products with params:", params.toString());
+            // console.log("Fetching products with params:", params.toString());
             const response = await api.get(`/product/get-user-products?${params.toString()}`);
-            return response.data.data;
+            return response.data;
         }
     });
 
-    const products = productResponse || [];
+    const products = productResponse?.data || [];
     const totalProducts = productResponse?.meta?.total || 0;
 
     useEffect(() => {
@@ -210,7 +213,7 @@ const ShopPage = () => {
                             Showing {totalProducts} results
                         </div>
                         {productLoading ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {Array.from({ length: limit }).map((_, index) => (
                                     <div key={index} className="border rounded-md p-4">
                                         <Skeleton className="h-48 w-full mb-4" />
@@ -220,7 +223,7 @@ const ShopPage = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {products.map((product) => (
                                     <ShopCard key={product._id} product={product} handleWishlistClick={handleWishlistClick} />
                                 ))}

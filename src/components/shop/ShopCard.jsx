@@ -14,7 +14,7 @@ const ShopCard = ({ product, favouriteIds, handleWishlistClick }) => {
         <div key={product._id} className="p-1">
             <div className="overflow-hidden relative">
                 {/* Product Image */}
-                <Link href={`/shop/details?id=${product?._id}`}>
+                <Link href={`/shop/${product?._id}`}>
                     <div className="relative w-full aspect-[5/6] flex items-center justify-center overflow-hidden">
                         <Image
                             src={product?.images[0]}

@@ -47,15 +47,23 @@ const Wishlist = () => {
                     )
                 }
                 {wishlistLoading ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                            <div key={index} className="border rounded-md p-4">
-                                <Skeleton className="h-48 w-full mb-4" />
-                                <Skeleton className="h-4 w-3/4 mb-2" />
-                                <Skeleton className="h-4 w-1/2" />
-                            </div>
-                        ))}
-                    </div>
+                    <>
+                        <div className="text-subtitle mb-4">
+                            <Skeleton className="h-4 w-1/9" />
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <div key={index} className="border rounded-md p-4">
+                                    <Skeleton className="h-60 w-full mb-4" />
+                                    <Skeleton className="h-4 w-3/4 mb-2" />
+                                    <div className="flex items-center justify-between">
+                                        <Skeleton className="h-4 w-1/2" />
+                                        <Skeleton className="h-4 w-4" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
                 ) : (
                     favoriteProducts.length === 0 ? (
                         <div className="flex flex-col gap-2 items-center justify-center h-[70%] text-subtitle text-lg col-span-full">
@@ -71,8 +79,8 @@ const Wishlist = () => {
                                         <Link href={`/shop/details?id=${product?._id}`}>
                                             <div className="relative w-full aspect-[5/6] flex items-center justify-center overflow-hidden">
                                                 <Image
-                                                    src={product.images[0]}
-                                                    alt={product.name}
+                                                    src={product?.images[0]}
+                                                    alt={product?.name}
                                                     fill
                                                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                                                     className="rounded-xl object-cover"
@@ -81,25 +89,25 @@ const Wishlist = () => {
                                         </Link>
                                         <div
                                             className="absolute top-2 right-2 z-10 bg-primary/10 backdrop-blur-xs rounded-full p-2 cursor-pointer"
-                                            onClick={() => handleWishlistClick(product._id)}
+                                            onClick={() => handleWishlistClick(product?._id)}
                                         >
-                                            <Heart className={`w-6 h-6 text-primary ${product.isFavourite ? "fill-primary" : ""}`} />
+                                            <Heart className={`w-6 h-6 text-primary ${product?.isFavourite ? "fill-primary" : ""}`} />
                                         </div>
 
                                         <div className="mt-4 px-2">
-                                            <h3 className="text-sm font-medium text-title line-clamp-1 mb-1">{product.name}</h3>
+                                            <h3 className="text-sm font-medium text-title line-clamp-1 mb-1">{product?.name}</h3>
                                             <div className="flex justify-between items-center">
                                                 <div className="flex items-baseline space-x-2 mb-2">
-                                                    <span className="text-lg font-semibold text-title">${product.currentPrice}</span>
-                                                    {product.originalPrice && (
+                                                    <span className="text-lg font-semibold text-title">${product?.currentPrice}</span>
+                                                    {product?.originalPrice > 0 && (
                                                         <span className="text-sm text-subtitle line-through">
-                                                            ${product.originalPrice}
+                                                            ${product?.originalPrice}
                                                         </span>
                                                     )}
                                                 </div>
                                                 <p className="flex items-center gap-1 text-sm">
                                                     <Star className="w-4 h-4 text-primary" />
-                                                    {product.ratings}
+                                                    {product?.ratings}
                                                 </p>
                                             </div>
                                         </div>

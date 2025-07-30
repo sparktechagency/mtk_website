@@ -1,27 +1,47 @@
 "use client";
 import React, { useState } from "react";
+import { useParams } from 'next/navigation';
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
 import PageLayout from "@/components/layout/PageLayout";
-import { productDetailsDataMap } from "@/data/data";
 import SimilarProducts from "@/components/shop/details/SimilarProducts";
 import { toast } from "sonner"
 import ProductImageGallery from "@/components/shop/details/ProductImageGallery";
 import ProductInfo from "@/components/shop/details/ProductInfo";
 import ProductTabs from "@/components/shop/details/ProductTabs";
+import { useQuery } from "@tanstack/react-query";
+import { getSingleProduct } from "@/api/product/getSIngleProduct";
+import DetailsPageSkeleton from "@/components/shop/details/DetailsPageSkeleton";
 
 const DetailsPage = () => {
-    const product = productDetailsDataMap["1"];
+    const params = useParams();
+    const { id: productId } = params;
 
-    const [mainImage, setMainImage] = useState(product.images[0]);
-    const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
-    const [selectedColor, setSelectedColor] = useState(product.colors[0].name);
+    const { data, isLoading } = useQuery({
+        queryKey: ["product", productId],
+        queryFn: () => getSingleProduct(productId),
+        enabled: !!productId,
+    });
+
+    const product = data?.product;
+    const relatedProducts = data?.relatedProducts;
+
+    const [mainImage, setMainImage] = useState("");
+    const [selectedSize, setSelectedSize] = useState("");
+    const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
 
+    React.useEffect(() => {
+        if (product) {
+            setMainImage(product.images?.[0] || "");
+            setSelectedSize(product.sizes?.[0]?.size || "");
+            setSelectedColor(product.colors?.[0]?.name || "");
+        }
+    }, [product]);
 
     const breadcrumbLinks = [
         { name: "Home", href: "/" },
         { name: "Shop", href: "/shop" },
-        { name: product.name, isCurrent: true },
+        { name: product?.name || "Product", isCurrent: true },
     ];
 
     const handleQuantityChange = (type) => {
@@ -43,6 +63,10 @@ const DetailsPage = () => {
         })
     }
 
+    if (isLoading) {
+        return <DetailsPageSkeleton />;
+    }
+
     return (
         <div className='min-h-minus-header'>
             <PageLayout>
@@ -53,23 +77,23 @@ const DetailsPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 md:items-start gap-8 pb-12">
                     <ProductImageGallery product={product} mainImage={mainImage} setMainImage={setMainImage} />
-                    <ProductInfo 
-                        product={product} 
-                        selectedSize={selectedSize} 
-                        selectedColor={selectedColor} 
-                        quantity={quantity} 
-                        handleQuantityChange={handleQuantityChange} 
-                        handleAddToCart={handleAddToCart} 
-                        setSelectedSize={setSelectedSize} 
-                        setSelectedColor={setSelectedColor} 
-                        setMainImage={setMainImage} 
+                    <ProductInfo
+                        product={product}
+                        selectedSize={selectedSize}
+                        selectedColor={selectedColor}
+                        quantity={quantity}
+                        handleQuantityChange={handleQuantityChange}
+                        handleAddToCart={handleAddToCart}
+                        setSelectedSize={setSelectedSize}
+                        setSelectedColor={setSelectedColor}
+                        setMainImage={setMainImage}
                     />
                 </div>
 
                 <ProductTabs product={product} />
 
                 {/* Similar Products */}
-                <SimilarProducts />
+                <SimilarProducts relatedProducts={relatedProducts} />
 
             </PageLayout>
         </div>

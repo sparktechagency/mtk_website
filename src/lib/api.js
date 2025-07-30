@@ -2,7 +2,7 @@ import axios from 'axios';
 import useAuthStore from '@/store/auth';
 
 const api = axios.create({
-  baseURL: 'https://mtk-server-zeta.vercel.app/api/v1',
+  baseURL: 'http://localhost:9090/api/v1',
 });
 
 api.interceptors.request.use(

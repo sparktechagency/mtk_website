@@ -11,21 +11,38 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
         <div className="space-y-4">
             {/* Price and Title */}
             <div className="flex flex-col gap-2">
-                {product.discount && (
+                {product?.discount && (
                     <Badge variant="outline" className="rounded-full text-sm font-medium text-green-600 border-green-600 px-2 py-1">
                         {product.discount}
                     </Badge>
                 )}
-                <h1 className="text-2xl md:text-3xl font-bold text-title">{product.name}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-title">{product?.name}</h1>
                 <div className="flex items-center gap-3 mt-1">
-                    <span className={`px-2 py-1 text-sm ${product.inStock ? "text-primary bg-primary/8" : "text-red-500 bg-red-50"} rounded`}>{product.inStock ? "In Stock" : "Out of Stock"}</span>
-                    <StarRating rating={product.rating} starClassName="size-4" />
-                    <span className="text-sm text-subtitle">({product.numberOfReviews} Reviews)</span>
+                    <span
+                        className={`px-2 py-1 text-sm rounded
+                             ${product?.stockStatus === "in_stock"
+                                ? "text-green-600 bg-green-100"
+                                : product?.stockStatus === "stock_out"
+                                    ? "text-red-500 bg-red-50"
+                                    : "text-yellow-600 bg-yellow-100"
+                            }`}
+                    >
+                        {
+                            product?.stockStatus === "in_stock"
+                                ? "In Stock"
+                                : product?.stockStatus === "stock_out"
+                                    ? "Out of Stock"
+                                    : "Upcoming"
+                        }
+                    </span>
+
+                    <StarRating rating={product?.ratings} starClassName="size-4" />
+                    <span className="text-sm text-subtitle">({product?.totalReview} Reviews)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="text-xl md:text-2xl font-bold text-title">${product.price.toFixed(2)}</span>
-                    {product.oldPrice && (
-                        <span className="text-base text-subtitle line-through">${product.oldPrice.toFixed(2)}</span>
+                    <span className="text-xl md:text-2xl font-bold text-title">${product?.currentPrice?.toFixed(2)}</span>
+                    {product?.originalPrice > 0 && (
+                        <span className="text-base text-subtitle line-through">${product?.originalPrice?.toFixed(2)}</span>
                     )}
                 </div>
             </div>
@@ -33,12 +50,15 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
             <Separator />
 
             {/* Short Description */}
-            <p className="text-subtitle leading-relaxed text-base">{product.shortDescription}</p>
+            <div
+                className="prose dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: product?.introduction || "" }}
+            />
 
             <Separator />
 
             {/* Color Selection */}
-            {product.colors && product.colors.length > 0 && (
+            {product?.colors && product.colors.length > 0 && (
                 <div className="flex flex-col gap-3">
                     <h3 className="text-lg font-semibold text-subtitle">Color</h3>
                     <div className="flex items-center gap-2">
@@ -47,11 +67,11 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                                 key={color.name}
                                 className={cn(
                                     "size-6 rounded-full border-2 cursor-pointer transition-all duration-200",
-                                    selectedColor === color.hex ? "border-gray-400 scale-110" : "border-gray-200 hover:scale-105"
+                                    selectedColor === color.hexCode ? "border-gray-400 scale-110" : "border-gray-200 hover:scale-105"
                                 )}
-                                style={{ backgroundColor: color.hex }}
+                                style={{ backgroundColor: color.hexCode }}
                                 onClick={() => {
-                                    setSelectedColor(color.hex);
+                                    setSelectedColor(color.hexCode);
                                 }}
                                 title={color.name}
                             ></div>
@@ -61,22 +81,22 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
             )}
 
             {/* Size Selection */}
-            {product.sizes && product.sizes.length > 0 && (
+            {product?.sizes && product.sizes.length > 0 && (
                 <div className="flex flex-col gap-3">
                     <h3 className="text-lg font-semibold text-subtitle">Size</h3>
                     <div className="flex items-center gap-2">
                         {product.sizes.map((size) => (
                             <Button
-                                key={size}
-                                variant={selectedSize === size ? "default" : "outline"}
+                                key={size.size}
+                                variant={selectedSize === size.size ? "default" : "outline"}
                                 size="sm"
                                 className={cn(
                                     "rounded-md px-4 py-2 text-sm",
-                                    selectedSize === size ? "bg-primary/20 hover:bg-primary/20 text-primary" : "text-subtitle hover:bg-gray-100"
+                                    selectedSize === size.size ? "bg-primary/20 hover:bg-primary/20 text-primary" : "text-subtitle hover:bg-gray-100"
                                 )}
-                                onClick={() => setSelectedSize(size)}
+                                onClick={() => setSelectedSize(size.size)}
                             >
-                                {size}
+                                {size.size}
                             </Button>
                         ))}
                     </div>

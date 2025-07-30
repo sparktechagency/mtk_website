@@ -159,8 +159,8 @@ const ShopPage = () => {
 
     const products = productResponse?.data || [];
     const totalProducts = productResponse?.meta?.total || 0;
-    
-    const { data: favouriteIdsResponse} = useQuery({
+
+    const { data: favouriteIdsResponse } = useQuery({
         queryKey: ["favouriteIds"],
         queryFn: () => api.get("/favourite/get-favourite-ids")
     })
@@ -225,15 +225,23 @@ const ShopPage = () => {
                             )
                         }
                         {productLoading ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {Array.from({ length: limit }).map((_, index) => (
-                                    <div key={index} className="border rounded-md p-4">
-                                        <Skeleton className="h-48 w-full mb-4" />
-                                        <Skeleton className="h-4 w-3/4 mb-2" />
-                                        <Skeleton className="h-4 w-1/2" />
-                                    </div>
-                                ))}
-                            </div>
+                            <>
+                                <div className="text-subtitle mb-4">
+                                    <Skeleton className="h-4 w-1/6" />
+                                </div>
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {Array.from({ length: limit }).map((_, index) => (
+                                        <div key={index} className="border rounded-md p-4">
+                                            <Skeleton className="h-48 w-full mb-4" />
+                                            <Skeleton className="h-4 w-3/4 mb-2" />
+                                            <div className="flex items-center justify-between">
+                                                <Skeleton className="h-4 w-1/2" />
+                                                <Skeleton className="h-4 w-4" />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
                         ) : (
                             products.length === 0 ? (
                                 <div className="flex flex-col gap-2 items-center justify-center h-[70%] text-subtitle text-lg col-span-full">

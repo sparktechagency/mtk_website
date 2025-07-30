@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCart } from "@/api/product/getCart";
+import { deleteCartItem } from "@/api/product/deleteCartItem";
 import { Separator } from "@/components/ui/separator";
 import SimpleHero from '@/components/common/SimpleHero';
 import PageLayout from '@/components/layout/PageLayout';
@@ -10,12 +11,30 @@ import CartTableHeader from "@/components/cart/CartTableHeader";
 import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 const CartPage = () => {
+    const queryClient = useQueryClient();
+
     const { data: cartItems, isLoading, isError } = useQuery({
         queryKey: ["cart"],
         queryFn: getCart,
     });
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteCartItem,
+        onSuccess: () => {
+            toast.success("Item removed from cart");
+            queryClient.invalidateQueries(["cart"]);
+        },
+        onError: () => {
+            toast.error("Failed to remove item from cart");
+        }
+    });
+
+    const handleRemoveItem = (id) => {
+        deleteMutation.mutate(id);
+    };
 
     const totalItems = cartItems?.length || 0;
     const subTotal = cartItems?.reduce(
@@ -55,8 +74,7 @@ const CartPage = () => {
                                     <React.Fragment key={item._id}>
                                         <CartItem
                                             item={item}
-                                            // handleQuantityChange={handleQuantityChange}
-                                            // handleRemoveItem={handleRemoveItem}
+                                            handleRemoveItem={handleRemoveItem}
                                         />
                                         {index < cartItems.length - 1 && <Separator />}
                                     </React.Fragment>

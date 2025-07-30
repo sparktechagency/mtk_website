@@ -57,7 +57,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                         variant="ghost"
                         size="icon"
                         className="text-subtitle hover:text-red-500 transition-colors"
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item._id)}
                     >
                         <Trash2 className="size-5" />
                     </Button>

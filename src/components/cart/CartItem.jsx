@@ -20,7 +20,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                         />
                     </div>
                     <div className="flex flex-col">
-                        <Link href={`/product/${item.id}`} className="font-medium text-title hover:text-primary transition-colors">
+                        <Link href={`/product/${item._id}`} className="font-medium text-title hover:text-primary transition-colors">
                             {item.name}
                         </Link>
                         <span className="text-sm text-subtitle">${item.price.toFixed(2)}</span>
@@ -32,7 +32,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 rounded-none border-0 border-r"
-                            onClick={() => handleQuantityChange(item.id, "decrement")}
+                            onClick={() => handleQuantityChange(item._id, "decrement")}
                         >
                             <Minus className="size-4 text-subtitle" />
                         </Button>
@@ -41,7 +41,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 rounded-none border-0 border-l"
-                            onClick={() => handleQuantityChange(item.id, "increment")}
+                            onClick={() => handleQuantityChange(item._id, "increment")}
                         >
                             <Plus className="size-4 text-subtitle" />
                         </Button>
@@ -77,7 +77,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                         />
                     </div>
                     <div className="flex flex-col flex-grow">
-                        <Link href={`/product/${item.id}`} className="font-medium text-title hover:text-primary transition-colors mb-1">
+                        <Link href={`/product/${item._id}`} className="font-medium text-title hover:text-primary transition-colors mb-1">
                             {item.name}
                         </Link>
                         <span className="text-sm text-subtitle">Price: ${item.price.toFixed(2)}</span>
@@ -92,7 +92,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 rounded-none border-0 border-r"
-                            onClick={() => handleQuantityChange(item.id, "decrement")}
+                            onClick={() => handleQuantityChange(item._id, "decrement")}
                         >
                             <Minus className="size-4 text-subtitle" />
                         </Button>
@@ -101,7 +101,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 rounded-none border-0 border-l"
-                            onClick={() => handleQuantityChange(item.id, "increment")}
+                            onClick={() => handleQuantityChange(item._id, "increment")}
                         >
                             <Plus className="size-4 text-subtitle" />
                         </Button>
@@ -110,7 +110,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                         variant="ghost"
                         size="icon"
                         className="text-subtitle hover:text-red-500 transition-colors"
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item._id)}
                     >
                         <Trash2 className="size-5" />
                     </Button>

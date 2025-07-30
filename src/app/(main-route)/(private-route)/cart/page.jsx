@@ -4,6 +4,7 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCart } from "@/api/product/getCart";
 import { deleteCartItem } from "@/api/product/deleteCartItem";
+import { updateCartItem } from "@/api/product/updateCartItem";
 import { Separator } from "@/components/ui/separator";
 import SimpleHero from '@/components/common/SimpleHero';
 import PageLayout from '@/components/layout/PageLayout';
@@ -32,8 +33,34 @@ const CartPage = () => {
         }
     });
 
+    const updateMutation = useMutation({
+        mutationFn: updateCartItem,
+        onSuccess: () => {
+            toast.success("Cart updated successfully");
+            queryClient.invalidateQueries(["cart"]);
+        },
+        onError: () => {
+            toast.error("Failed to update cart");
+        }
+    });
+
     const handleRemoveItem = (id) => {
         deleteMutation.mutate(id);
+    };
+
+    const handleQuantityChange = (id, type) => {
+        const item = cartItems.find(cartItem => cartItem._id === id);
+        if (!item) return;
+        let newQuantity = item?.quantity;
+        if (type === "increment") {
+            newQuantity = item?.quantity + 1;
+        } else if (type === "decrement" && item?.quantity > 1) {
+            newQuantity = item?.quantity - 1;
+        }
+
+        if (newQuantity !== item?.quantity) {
+            updateMutation.mutate({ id, quantity: newQuantity });
+        }
     };
 
     const totalItems = cartItems?.length || 0;
@@ -74,6 +101,7 @@ const CartPage = () => {
                                     <React.Fragment key={item._id}>
                                         <CartItem
                                             item={item}
+                                            handleQuantityChange={handleQuantityChange}
                                             handleRemoveItem={handleRemoveItem}
                                         />
                                         {index < cartItems.length - 1 && <Separator />}

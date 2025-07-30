@@ -1,18 +1,18 @@
 'use client'
-import { useState } from "react";
+// import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import StarRating from "@/components/shop/details/StarRating";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { ScrollArea } from "@/components/ui/scroll-area";
+// import StarRating from "@/components/shop/details/StarRating";
+// import { Button } from "@/components/ui/button";
+// import { ChevronRight } from "lucide-react";
 
 const ProductTabs = ({ product }) => {
-    const [visibleReviews, setVisibleReviews] = useState(3);
+    // const [visibleReviews, setVisibleReviews] = useState(3);
 
-    const handleShowMoreReviews = () => {
-        setVisibleReviews((prev) => prev + 3);
-    };
+    // const handleShowMoreReviews = () => {
+    //     setVisibleReviews((prev) => prev + 3);
+    // };
 
     return (
         <div>

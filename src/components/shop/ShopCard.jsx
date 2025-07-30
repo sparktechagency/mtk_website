@@ -7,7 +7,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 const ShopCard = ({ product, favouriteIds, handleWishlistClick }) => {
 
     const { isLoadingIds } = useWishlistStore();
-    const isThisProductLoading = isLoadingIds.has(product?._id);
+    const isThisProductLoading = isLoadingIds.has(product?._id); 
 
     const token = useAuthStore.getState().token;
     return (

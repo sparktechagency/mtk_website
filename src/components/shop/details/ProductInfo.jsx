@@ -4,9 +4,21 @@ import StarRating from "@/components/shop/details/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingCart, Heart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Heart, Loader2 } from "lucide-react";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/api";
 
-const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor }) => {
+const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading }) => {
+    const { data: favouriteIdsResponse } = useQuery({
+        queryKey: ["favouriteIds"],
+        queryFn: () => api.get("/favourite/get-favourite-ids")
+    })
+    const favouriteIds = favouriteIdsResponse?.data?.data || [];
+
+    const { isLoadingIds, toggleFavouriteProduct } = useWishlistStore();
+    const queryClient = useQueryClient();
+    const isThisProductLoading = isLoadingIds.has(product?._id);
     return (
         <div className="space-y-4">
             {/* Price and Title */}
@@ -115,11 +127,22 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                     </Button>
                 </div>
                 <Button onClick={() => handleAddToCart(product, selectedSize, selectedColor, quantity)} className="flex-1 font-medium rounded-md shadow-md">
-                    <ShoppingCart className="size-5 mr-2" />
-                    Add To Cart
+                    {isAddToCartLoading ? (
+                        <><Loader2 className="w-6 h-6 animate-spin" /> Adding</>
+                    ) : (
+                        <>
+                            <ShoppingCart className="size-5 mr-2" />
+                            Add To Cart
+                        </>
+                    )}
+
                 </Button>
-                <Button variant="outline" size="icon" className="rounded-md hover:bg-gray-100">
-                    <Heart className="size-5 text-primary" />
+                <Button onClick={() => toggleFavouriteProduct(product?._id, queryClient)} variant="outline" size="icon" className="rounded-md hover:bg-gray-100">
+                    {isThisProductLoading ? (
+                        <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                    ) : (
+                        <Heart className={`w-6 h-6 text-primary ${favouriteIds.includes(product?._id) ? "fill-primary" : ""}`} />
+                    )}
                 </Button>
             </div>
         </div>

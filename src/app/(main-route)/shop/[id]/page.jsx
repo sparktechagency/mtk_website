@@ -8,9 +8,10 @@ import { toast } from "sonner"
 import ProductImageGallery from "@/components/shop/details/ProductImageGallery";
 import ProductInfo from "@/components/shop/details/ProductInfo";
 import ProductTabs from "@/components/shop/details/ProductTabs";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSingleProduct } from "@/api/product/getSIngleProduct";
 import DetailsPageSkeleton from "@/components/shop/details/DetailsPageSkeleton";
+import { addToCart } from "@/api/product/addToCart";
 
 const DetailsPage = () => {
     const params = useParams();
@@ -52,15 +53,22 @@ const DetailsPage = () => {
         }
     };
 
+    const {mutate, isLoading: isAddToCartLoading} = useMutation({
+        mutationFn: addToCart,
+        onSuccess: () => {
+            toast.success("Product added to cart successfully.");
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to add product to cart.");
+        }
+    })
+
     const handleAddToCart = (product, selectedSize, selectedColor, quantity) => {
-        console.log(product, selectedSize, selectedColor, quantity);
-        toast("Product added to cart successfully.", {
-            icon: "👏",
-            style: {
-                borderRadius: "10px",
-            },
-            duration: 3000,
+        mutate({
+            productId: product._id,
+            quantity
         })
+
     }
 
     if (isLoading) {
@@ -87,6 +95,7 @@ const DetailsPage = () => {
                         setSelectedSize={setSelectedSize}
                         setSelectedColor={setSelectedColor}
                         setMainImage={setMainImage}
+                        isAddToCartLoading={isAddToCartLoading}
                     />
                 </div>
 

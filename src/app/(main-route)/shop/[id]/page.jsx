@@ -44,7 +44,7 @@ const DetailsPage = () => {
     const breadcrumbLinks = [
         { name: "Home", href: "/" },
         { name: "Shop", href: "/shop" },
-        { name: product?.name || "Product", isCurrent: true },
+        { name: product?.name || "Product", isCurrent: true }, 
     ];
 
     const handleQuantityChange = (type) => {
@@ -65,12 +65,26 @@ const DetailsPage = () => {
         }
     })
 
-    const handleAddToCart = (product, quantity) => {
+    const handleAddToCart = (product, quantity, selectedColorName, selectedSizeValue) => {
         const body = {
             productId: product._id,
             quantity
         }
-        console.log(body);
+
+        if (selectedColorName) {
+            const colorObject = product.colors?.find(color => color.name === selectedColorName);
+            if (colorObject) {
+                body.colorId = colorObject._id;
+            }
+        }
+
+        if (selectedSizeValue) {
+            const sizeObject = product.sizes?.find(size => size.size === selectedSizeValue);
+            if (sizeObject) {
+                body.sizeId = sizeObject._id;
+            }
+        }
+        
         mutate(body)
 
     }

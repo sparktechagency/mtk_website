@@ -127,7 +127,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                         <Plus className="size-4" />
                     </Button>
                 </div>
-                <Button onClick={() => handleAddToCart(product, quantity)} className="flex-1 font-medium rounded-md shadow-md">
+                <Button onClick={() => handleAddToCart(product, quantity, selectedColor, selectedSize)} className="flex-1 font-medium rounded-md shadow-md">
                     {isAddToCartLoading ? (
                         <><Loader2 className="w-6 h-6 animate-spin" /> Adding</>
                     ) : (

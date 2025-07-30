@@ -161,7 +161,6 @@ export const initialCartItems = [
     name: "Great Ball Mystery Bag",
     price: 40.00,
     quantity: 2,
-    selected: false,
   },
   {
     id: "2",
@@ -169,7 +168,6 @@ export const initialCartItems = [
     name: "Pokemon Assorted Booster Packs",
     price: 35.00,
     quantity: 1,
-    selected: false,
   },
   {
     id: "3",
@@ -177,7 +175,6 @@ export const initialCartItems = [
     name: "Ultimate Player T-Shirt",
     price: 55.00,
     quantity: 4,
-    selected: false,
   },
   {
     id: "4",
@@ -185,7 +182,6 @@ export const initialCartItems = [
     name: "Pokemon TCG Collectors",
     price: 30.00,
     quantity: 2,
-    selected: false,
   },
   {
     id: "5",
@@ -193,7 +189,6 @@ export const initialCartItems = [
     name: "Victory Training Tee",
     price: 65.00,
     quantity: 3,
-    selected: false,
   },
   {
     id: "6",
@@ -201,7 +196,6 @@ export const initialCartItems = [
     name: "Champion's Workout Tee",
     price: 50.00,
     quantity: 2,
-    selected: false,
   },
 ];
 

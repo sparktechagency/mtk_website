@@ -1,50 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCart } from "@/api/product/getCart";
 import { Separator } from "@/components/ui/separator";
 import SimpleHero from '@/components/common/SimpleHero';
 import PageLayout from '@/components/layout/PageLayout';
-import { initialCartItems } from "@/data/data";
 import CartTableHeader from "@/components/cart/CartTableHeader";
 import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CartPage = () => {
-    const [cartItems, setCartItems] = useState(initialCartItems);
+    const { data: cartItems, isLoading, isError } = useQuery({
+        queryKey: ["cart"],
+        queryFn: getCart,
+    });
 
-    const handleQuantityChange = (id, type) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) => {
-                if (item.id === id) {
-                    if (type === "increment") {
-                        return { ...item, quantity: item.quantity + 1 };
-                    } else if (type === "decrement" && item.quantity > 1) {
-                        return { ...item, quantity: item.quantity - 1 };
-                    }
-                }
-                return item;
-            })
-        );
-    };
-
-    const handleRemoveItem = (id) => { 
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-    };
-
-    const handleCheckboxChange = (id) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.id === id ? { ...item, selected: !item.selected } : item
-            )
-        );
-    };
-
-    const selectedItems = cartItems.filter((item) => item.selected);
-    const totalItems = selectedItems.length;
-    const subTotal = selectedItems.reduce(
+    const totalItems = cartItems?.length || 0;
+    const subTotal = cartItems?.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
-    );
+    ) || 0;
 
     const heroLinks = [
         { name: "Home", href: "/" },
@@ -63,16 +40,23 @@ const CartPage = () => {
                             <CartTableHeader />
 
                             {/* Product Items */}
-                            {cartItems.length === 0 ? (
+                            {isLoading ? (
+                                <div className="space-y-4">
+                                    <Skeleton className="h-24 w-full" />
+                                    <Skeleton className="h-24 w-full" />
+                                    <Skeleton className="h-24 w-full" />
+                                </div>
+                            ) : isError ? (
+                                <div className="text-center py-10 text-red-500">Failed to load cart items.</div>
+                            ) : cartItems.length === 0 ? (
                                 <div className="text-center py-10 text-subtitle">Your cart is empty.</div>
                             ) : (
                                 cartItems.map((item, index) => (
-                                    <React.Fragment key={item.id}>
+                                    <React.Fragment key={item._id}>
                                         <CartItem
                                             item={item}
-                                            handleQuantityChange={handleQuantityChange}
-                                            handleRemoveItem={handleRemoveItem}
-                                            handleCheckboxChange={handleCheckboxChange}
+                                            // handleQuantityChange={handleQuantityChange}
+                                            // handleRemoveItem={handleRemoveItem}
                                         />
                                         {index < cartItems.length - 1 && <Separator />}
                                     </React.Fragment>

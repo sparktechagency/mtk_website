@@ -63,7 +63,7 @@ const DetailsPage = () => {
         }
     })
 
-    const handleAddToCart = (product, selectedSize, selectedColor, quantity) => {
+    const handleAddToCart = (product, quantity) => {
         mutate({
             productId: product._id,
             quantity

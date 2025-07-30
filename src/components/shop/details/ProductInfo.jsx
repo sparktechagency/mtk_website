@@ -1,4 +1,4 @@
-'use client'
+'use client' 
 import { Badge } from "@/components/ui/badge";
 import StarRating from "@/components/shop/details/StarRating";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 
 const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading }) => {
+
     const { data: favouriteIdsResponse } = useQuery({
         queryKey: ["favouriteIds"],
         queryFn: () => api.get("/favourite/get-favourite-ids")
@@ -126,7 +127,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                         <Plus className="size-4" />
                     </Button>
                 </div>
-                <Button onClick={() => handleAddToCart(product, selectedSize, selectedColor, quantity)} className="flex-1 font-medium rounded-md shadow-md">
+                <Button onClick={() => handleAddToCart(product, quantity)} className="flex-1 font-medium rounded-md shadow-md">
                     {isAddToCartLoading ? (
                         <><Loader2 className="w-6 h-6 animate-spin" /> Adding</>
                     ) : (

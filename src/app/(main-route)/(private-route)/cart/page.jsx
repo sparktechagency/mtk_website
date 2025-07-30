@@ -27,7 +27,7 @@ const CartPage = () => {
         );
     };
 
-    const handleRemoveItem = (id) => {
+    const handleRemoveItem = (id) => { 
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     };
 

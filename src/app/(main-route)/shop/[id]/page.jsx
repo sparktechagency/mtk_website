@@ -24,12 +24,14 @@ const DetailsPage = () => {
     });
 
     const product = data?.product;
-    const relatedProducts = data?.relatedProducts;
+    const relatedProducts = data?.relatedProducts; 
 
     const [mainImage, setMainImage] = useState("");
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
+
+    // console.log("from usestate",quantity);
 
     React.useEffect(() => {
         if (product) {
@@ -64,10 +66,12 @@ const DetailsPage = () => {
     })
 
     const handleAddToCart = (product, quantity) => {
-        mutate({
+        const body = {
             productId: product._id,
             quantity
-        })
+        }
+        console.log(body);
+        mutate(body)
 
     }
 

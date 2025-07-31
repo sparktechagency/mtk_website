@@ -3,7 +3,7 @@ import useAuthStore from '@/store/auth';
 import { toast } from 'sonner';
 
 const api = axios.create({
-  baseURL: 'http://localhost:9090/api/v1',
+  baseURL: 'https://mtk-server-zeta.vercel.app/api/v1',
 });
 
 api.interceptors.request.use(

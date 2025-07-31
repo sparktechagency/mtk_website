@@ -10,7 +10,7 @@ const OrderCard = ({ order, getStatusColor, onReview }) => {
         <div className="border rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-start">
                 <div className="flex flex-col">
-                    <span className="text-sm font-medium text-title">Order ID: {order._id.slice(0, 8)}...</span>
+                    <span className="text-sm font-medium text-title">Order ID: {order.token}</span>
                     <span className="text-xs text-subtitle">{new Date(order.createdAt).toLocaleDateString()}</span>
                 </div>
                 <span className={`text-sm font-medium capitalize ${getStatusColor(order.status)}`}>{order.status}</span>

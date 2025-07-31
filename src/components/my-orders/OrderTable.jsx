@@ -30,7 +30,7 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
             <TableBody>
                 {orders?.map((order) => (
                     <TableRow key={order?._id}>
-                        <TableCell className="font-medium">{order._id.slice(0, 8)}...</TableCell>
+                        <TableCell className="font-medium">{order.token}</TableCell>
                         <TableCell>{new Date(order?.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell>
                             <div className="flex flex-col gap-2">

@@ -16,12 +16,12 @@ const PrivateRoute = ({ children }) => {
 
     if (!token) {
       toast.error('You need to be logged in to access this page.');
-      router.push('/auth/login');
+      router.push('/');
       return;
     }
 
     if (!isLoading && isError) {
-      toast.error('Your session has expired or is invalid. Please log in again.');
+      // toast.error('Your session has expired or is invalid. Please log in again.');
       router.push('/auth/login');
     }
   }, [isLoading, isError, user, router, token]);

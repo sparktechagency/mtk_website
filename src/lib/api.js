@@ -1,5 +1,6 @@
 import axios from 'axios';
 import useAuthStore from '@/store/auth';
+import { toast } from 'sonner';
 
 const api = axios.create({
   baseURL: 'http://localhost:9090/api/v1',
@@ -32,8 +33,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
       console.log(error);
+      toast.error("Your session has expired or is invalid. Please log in again.");
       useAuthStore.getState().clearToken();
-      window.location.href = "/auth/login";
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }

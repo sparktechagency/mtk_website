@@ -12,14 +12,15 @@ import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
 
 
 const Navbar = () => {
     const { setTheme } = useTheme()
     const token = useAuthStore.getState().token;
     const clearToken = useAuthStore.getState().clearToken;
-
     const { user, isLoading } = useGetMe();
+    const handleAuthRedirect = useAuthRedirect();
 
     const isLoggedIn = !!token && !!user;
     const userName = user?.fullName || "Guest";
@@ -148,12 +149,19 @@ const Navbar = () => {
                             </div>
 
                             {/* Heart/Favorites Icon */}
-                            <Link href="/wishlist">
+                            {/* <Link href="/wishlist">
                                 <Button variant="ghost" size="icon" className="">
                                     <Heart className="h-5 w-5 text-subtitle" />
                                     <span className="sr-only">Favorites</span>
                                 </Button>
-                            </Link>
+                            </Link> */}
+
+                            <div onClick={(e) => handleAuthRedirect(e, '/wishlist')}>
+                                <Button variant="ghost" size="icon" className="">
+                                    <Heart className="h-5 w-5 text-subtitle" />
+                                    <span className="sr-only">Favorites</span>
+                                </Button>
+                            </div>
 
                             {/* User Profile Icon */}
                             <DropdownMenu>
@@ -221,14 +229,21 @@ const Navbar = () => {
                             </DropdownMenu>
 
                             {/* Shopping Cart Icon */}
-                            <Link href="/cart">
+                            {/* <Link href="/cart">
                                 <Button variant="ghost" size="icon" className="relative">
-                                    <ShoppingCart  className="h-5 w-5 text-subtitle" />
+                                    <ShoppingCart className="h-5 w-5 text-subtitle" />
+                                    <span className="sr-only">Shopping Cart</span>
+                                </Button>
+                            </Link> */}
+
+                            <div onClick={(e) => handleAuthRedirect(e, '/cart')}>
+                                <Button variant="ghost" size="icon" className="relative">
+                                    <ShoppingCart className="h-5 w-5 text-subtitle" />
                                     <span className="sr-only">Shopping Cart</span>
                                     {/* Optional cart count badge */}
                                     {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span> */}
                                 </Button>
-                            </Link>
+                            </div>
 
                             {/* Dark/Light Mode Toggle */}
                             <DropdownMenu>

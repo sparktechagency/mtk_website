@@ -13,8 +13,10 @@ import { getSingleProduct } from "@/api/product/getSIngleProduct";
 import DetailsPageSkeleton from "@/components/shop/details/DetailsPageSkeleton";
 import { addToCart } from "@/api/product/addToCart";
 import api from "@/lib/api";
+import useAuthStore from "@/store/auth";
 
 const DetailsPage = () => {
+    const token = useAuthStore.getState().token;
     const params = useParams();
     const { id: productId } = params;
 
@@ -65,6 +67,10 @@ const DetailsPage = () => {
     })
 
     const handleAddToCart = (product, quantity, selectedColorName, selectedSizeValue) => {
+        if (!token) {
+            toast.error("Please login to add product to cart.");
+            return;
+        }
         const body = {
             productId: product._id,
             quantity
@@ -129,7 +135,11 @@ const DetailsPage = () => {
                 <ProductTabs product={product} reviewData={reviewData} />
 
                 {/* Similar Products */}
-                <SimilarProducts relatedProducts={relatedProducts}/>
+                {
+                    relatedProducts?.length > 0 && (
+                        <SimilarProducts relatedProducts={relatedProducts} />
+                    )
+                }
 
             </PageLayout>
         </div>

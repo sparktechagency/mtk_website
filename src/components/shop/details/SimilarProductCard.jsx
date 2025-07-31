@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart, Loader2 } from "lucide-react";
 
-const SimilarProductCard = ({ product, favouriteIds, isLoading, handleWishlistClick, token }) => {
+const SimilarProductCard = ({ product, favouriteIds, isLoading, handleWishlistClick }) => {
 
     return (
         <div key={product._id} className="p-1">
@@ -20,15 +20,15 @@ const SimilarProductCard = ({ product, favouriteIds, isLoading, handleWishlistCl
                     </div>
                 </Link>
                 {
-                    token && (
-                        <div className="absolute top-2 right-2 cursor-pointer" onClick={() => handleWishlistClick(product?._id)}>
-                            {isLoading ? (
-                                <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                            ) : (
-                                <Heart className={`w-6 h-6 text-primary ${favouriteIds?.includes(product?._id) ? "fill-primary" : ""}`} />
-                            )}
-                        </div>
-                    )
+
+                    <div className="absolute top-2 right-2 cursor-pointer" onClick={() => handleWishlistClick(product?._id)}>
+                        {isLoading ? (
+                            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                        ) : (
+                            <Heart className={`w-6 h-6 text-primary ${favouriteIds?.includes(product?._id) ? "fill-primary" : ""}`} />
+                        )}
+                    </div>
+
                 }
 
                 <div className="mt-4 px-2">

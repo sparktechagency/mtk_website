@@ -1,4 +1,4 @@
-'use client' 
+'use client'
 import { Badge } from "@/components/ui/badge";
 import StarRating from "@/components/shop/details/StarRating";
 import { Separator } from "@/components/ui/separator";
@@ -9,6 +9,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import useAuthStore from "@/store/auth";
+import { toast } from "sonner";
 
 const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading }) => {
 
@@ -21,6 +22,13 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
     const favouriteIds = favouriteIdsResponse?.data?.data || [];
 
     const { isLoadingIds, toggleFavouriteProduct } = useWishlistStore();
+    const handleToggleFavourite = () => {
+        if (!token) {
+            toast.error("Please login to add product to wishlist.");
+            return;
+        }
+        toggleFavouriteProduct(product?._id, queryClient);
+    }
     const queryClient = useQueryClient();
     const isThisProductLoading = isLoadingIds.has(product?._id);
     return (
@@ -141,7 +149,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                     )}
 
                 </Button>
-                <Button onClick={() => toggleFavouriteProduct(product?._id, queryClient)} variant="outline" size="icon" className="rounded-md hover:bg-gray-100">
+                <Button onClick={handleToggleFavourite} variant="outline" size="icon" className="rounded-md hover:bg-gray-100">
                     {isThisProductLoading ? (
                         <Loader2 className="w-6 h-6 text-primary animate-spin" />
                     ) : (

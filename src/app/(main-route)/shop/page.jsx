@@ -28,6 +28,7 @@ import {
 import Lottie from "lottie-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import useAuthStore from "@/store/auth";
+import { toast } from "sonner";
 
 const ShopPage = () => {
     const token = useAuthStore.getState().token;
@@ -114,7 +115,11 @@ const ShopPage = () => {
         }
     };
 
-    const handleWishlistClick = (productId) => {
+    const handleWishlistClick = ( productId) => {
+        if (!token) {
+            toast.error("Please login to add product to wishlist.");
+            return;
+        }
         toggleFavouriteProduct(productId, queryClient);
     };
 

@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import SimilarProductCard from "./SimilarProductCard";
 import api from "@/lib/api";
 import useAuthStore from "@/store/auth";
+import { toast } from "sonner";
 
 const SimilarProducts = ({ relatedProducts }) => {
   const token = useAuthStore.getState().token;
@@ -14,7 +15,7 @@ const SimilarProducts = ({ relatedProducts }) => {
   const { toggleFavouriteProduct, isLoadingIds } = useWishlistStore();
   // const token = useAuthStore((state) => state.token);
 
-  const { data: favouriteIdsResponse } = useQuery({
+  const { data: favouriteIdsResponse } = useQuery({ 
     queryKey: ["favouriteIds"],
     queryFn: () => api.get("/favourite/get-favourite-ids"),
     enabled: !!token
@@ -22,6 +23,10 @@ const SimilarProducts = ({ relatedProducts }) => {
   const favouriteIds = favouriteIdsResponse?.data?.data || [];
 
   const handleWishlistClick = (productId) => {
+    if (!token) {
+      toast.error("Please login to add product to wishlist.");
+      return;
+    }
     toggleFavouriteProduct(productId, queryClient);
   };
 

@@ -1,20 +1,27 @@
-// components/TrendingCarousel.jsx
 "use client";
-
-import Image from "next/image";
-import PageLayout from "../layout/PageLayout";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Heart, Star } from "lucide-react";
-import { products } from "@/data/data";
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import TrendingProductCard from "./TrendingProductCard";
+import useAuthStore from "@/store/auth";
+import PageLayout from "../layout/PageLayout";
 
 const TrendingCarousel = () => {
+  const token = useAuthStore.getState().token;
 
-  const handleWishlistClick = (e, productId) => {
-    e.stopPropagation();
-    // Add your wishlist logic here
-    console.log(`Product ${productId} added to wishlist`); 
-  };
+  const { data, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => api.get("/product/get-user-products"),
+  });
+  const products = data?.data?.data || [];
+
+  const { data: favouriteIdsResponse, isLoading: isLoadingFavouriteIds } = useQuery({
+    queryKey: ["favouriteIds"],
+    queryFn: () => api.get("/favourite/get-favourite-ids"),
+    enabled: !!token,
+  });
+  const favouriteIds = favouriteIdsResponse?.data?.data || [];
 
   return (
     <div>
@@ -26,64 +33,57 @@ const TrendingCarousel = () => {
           </h2>
         </div>
 
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
-            {products.map((product) => (
-              <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <div className="p-1">
-                  <div className="overflow-hidden relative">
-                    {/* Product Image */}
-                    <Link href={`/shop/details?id=${product.id}`}>
-                      <div className="relative w-full aspect-[5/6] flex items-center justify-center overflow-hidden">
-                        <Image
-                          src={product.image}
-                          alt={product.title}
-                          fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                          className="rounded-xl object-cover"
-                        />
-                      </div>
-                    </Link>
-                    <div
-                      className="absolute top-2 right-2 z-10 bg-primary/10 backdrop-blur-xs rounded-full p-2 cursor-pointer"
-                      onClick={(e) => handleWishlistClick(e, product.id)}
-                    >
-                     <Heart className={`w-6 h-6 text-primary ${product.isFavorite ? "fill-primary" : ""}`} />
-                    </div>
-                    
-                    <div className="mt-4 px-2">
-                      <Link href={`/shop/details?id=${product.id}`}>
-                        <h3 className="text-sm font-medium text-title line-clamp-1 mb-1 hover:underline">{product.title}</h3>
-                      </Link>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-baseline space-x-2 mb-2">
-                          <span className="text-lg font-semibold text-title">{product.currency}{product.price}</span>
-                          {product.oldPrice && (
-                            <span className="text-sm text-subtitle line-through">
-                              {product.currency}{product.oldPrice}
-                            </span>
-                          )}
+        {isLoading ? (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {Array.from({ length: 7 }).map((_, index) => (
+                <CarouselItem key={index} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <div className="p-1">
+                    <div className="overflow-hidden relative">
+                      <Skeleton className="relative w-full aspect-[5/6] rounded-xl" />
+                      <div className="mt-4 px-2">
+                        <Skeleton className="h-4 w-3/4 mb-1" />
+                        <div className="flex justify-between items-center">
+                          <Skeleton className="h-6 w-1/3" />
+                          <Skeleton className="h-4 w-1/4" />
                         </div>
-                        <p className="flex items-center gap-1 text-sm">
-                          <Star className="w-4 h-4 text-primary" />
-                          {product.rating}
-                        </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        ) : (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {products?.slice(0, 7).map((product) => (
+                <CarouselItem key={product?._id} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <TrendingProductCard
+                    product={product}
+                    favouriteIds={favouriteIds}
+                    isLoading={isLoadingFavouriteIds}
+                    token={token}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
+          </Carousel>
+        )}
       </PageLayout>
     </div>
   );

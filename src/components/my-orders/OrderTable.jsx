@@ -47,29 +47,33 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="font-medium text-title">{product.name}</span>
-                                            <span className="text-sm text-subtitle">Qty: {product.quantity}</span>
+                                            <span className="text-sm text-subtitle">Qty: {product.quantity} | <span className="font-semibold">Price: ${product.price.toFixed(2)}</span></span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </TableCell>
                         <TableCell className="text-right font-semibold">${order.totalPrice.toFixed(2)}</TableCell>
-                        <TableCell className={`text-center font-medium ${getStatusColor(order.status)}`}>
+                        <TableCell className={`text-center font-medium capitalize ${getStatusColor(order.status)}`}>
                             {order.status}
                         </TableCell>
                         <TableCell className="text-center">
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className={`text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "delivered" || order.products.every(p => p.isReview) ? "text-subtitle border-gray-400" : ""}`}
-                                        disabled={order.status !== "delivered" || order.products.every(p => p.isReview)}
-                                        onClick={() => onReview(order)}
-                                    >
-                                        Review
-                                    </Button>
-                                </DialogTrigger>
-                            </Dialog>
+                            <div className="flex flex-col gap-2">
+                                {order.products.map((product) => (
+                                    <Dialog key={product.productId}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className={`text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "delivered" || product.isReview ? "text-subtitle border-gray-400" : ""}`}
+                                                disabled={order.status !== "delivered" || product.isReview}
+                                                onClick={() => onReview(order, product)}
+                                            >
+                                                Review
+                                            </Button>
+                                        </DialogTrigger>
+                                    </Dialog>
+                                ))}
+                            </div>
                         </TableCell>
                     </TableRow>
                 ))}

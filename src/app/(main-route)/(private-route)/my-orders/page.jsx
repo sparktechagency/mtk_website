@@ -15,7 +15,7 @@ import emptyAnimation from "../../../../../public/lottie/empty.json";
 const MyOrdersPage = () => {
 
 
-     const {data: ordersData, isLoading, isError} = useQuery({
+    const { data: ordersData, isLoading, isError } = useQuery({
         queryKey: ["orders"],
         queryFn: getAllOrders,
     });
@@ -23,7 +23,7 @@ const MyOrdersPage = () => {
     const orders = ordersData || [];
 
     const [isReviewModalOpen, setIsReviewModalOpen] = React.useState(false);
-    const [selectedOrder, setSelectedOrder] = React.useState(null); 
+    const [selectedOrder, setSelectedOrder] = React.useState(null);
 
     const heroLinks = [
         { name: "Home", href: "/" },
@@ -63,7 +63,9 @@ const MyOrdersPage = () => {
                 <PageLayout>
                     <div className="overflow-x-auto">
                         <div className="md:min-w-[800px]">
-                            <Skeleton className="h-12 w-full mb-4" />
+                            <div className="flex flex-col gap-2 items-center justify-center h-[70%] text-subtitle text-lg col-span-full">
+                                <Skeleton className="h-4 w-full mb-4" />
+                            </div>
                             {Array.from({ length: 5 }).map((_, index) => (
                                 <Skeleton key={index} className="h-24 w-full mb-2" />
                             ))}
@@ -119,7 +121,7 @@ const MyOrdersPage = () => {
                     isOpen={isReviewModalOpen}
                     onOpenChange={setIsReviewModalOpen}
                     onSubmit={handleReviewSubmit}
-                    initialData={selectedOrder ? { rating: 0, comment: "" } : null}
+                    // initialData={selectedProduct ? { rating: 0, comment: "", productId: selectedProduct.productId } : null}
                 />
             </PageLayout>
         </div>

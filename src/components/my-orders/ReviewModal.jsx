@@ -19,6 +19,7 @@ import { Star } from "lucide-react";
 const reviewSchema = z.object({
     rating: z.number().min(1, "Please select a rating."),
     comment: z.string().min(6, "Comment must be at least 6 characters."),
+    productId: z.string().optional(), // Add productId to schema
 });
 
 const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
@@ -31,19 +32,29 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
         reset,
     } = useForm({
         resolver: zodResolver(reviewSchema),
-        defaultValues: initialData || {
-            rating: 0,
-            comment: "",
+        defaultValues: {
+            rating: initialData?.rating || 0,
+            comment: initialData?.comment || "",
+            productId: initialData?.productId || "", // Set productId from initialData
         },
     });
 
     const rating = watch("rating");
+    const productId = watch("productId"); // Watch productId
 
     React.useEffect(() => {
         if (!isOpen) {
-            reset();
+            reset({
+                rating: initialData?.rating || 0,
+                comment: initialData?.comment || "",
+                productId: initialData?.productId || "",
+            });
         }
-    }, [isOpen, reset]);
+    }, [isOpen, reset, initialData]);
+
+    const handleFormSubmit = (data) => {
+        onSubmit({ ...data, productId }); // Pass productId to onSubmit
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -54,7 +65,7 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
                         Share your experience with this product.
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(handleFormSubmit)}>
                     <div className="grid gap-4 py-4">
                         <div className="flex flex-col gap-2">
                             <span className="text-sm font-medium">Rating:</span>

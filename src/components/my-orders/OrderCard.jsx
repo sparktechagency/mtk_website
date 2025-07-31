@@ -13,7 +13,7 @@ const OrderCard = ({ order, getStatusColor, onReview }) => {
                     <span className="text-sm font-medium text-title">Order ID: {order._id.slice(0, 8)}...</span>
                     <span className="text-xs text-subtitle">{new Date(order.createdAt).toLocaleDateString()}</span>
                 </div>
-                <span className={`text-sm font-medium ${getStatusColor(order.status)}`}>{order.status}</span>
+                <span className={`text-sm font-medium capitalize ${getStatusColor(order.status)}`}>{order.status}</span>
             </div>
             <div className="flex flex-col gap-3">
                 {order.products.map((product) => (
@@ -36,18 +36,22 @@ const OrderCard = ({ order, getStatusColor, onReview }) => {
                 ))}
             </div>
             <div className="text-md font-semibold text-title text-right">Total: ${order.totalPrice.toFixed(2)}</div>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button
-                        variant="outline"
-                        className={`w-full text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "delivered" || order.products.every(p => p.isReview) ? "text-subtitle border-gray-400" : ""}`}
-                        disabled={order.status !== "delivered" || order.products.every(p => p.isReview)}
-                        onClick={() => onReview(order)}
-                    >
-                        Write a Review
-                    </Button>
-                </DialogTrigger>
-            </Dialog>
+            <div className="flex flex-col gap-2">
+                {order.products.map((product) => (
+                    <Dialog key={product.productId}>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className={`w-full text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "delivered" || product.isReview ? "text-subtitle border-gray-400" : ""}`}
+                                disabled={order.status !== "delivered" || product.isReview}
+                                onClick={() => onReview(order, product)}
+                            >
+                                Write a Review for
+                            </Button>
+                        </DialogTrigger>
+                    </Dialog>
+                ))}
+            </div>
         </div>
     );
 };

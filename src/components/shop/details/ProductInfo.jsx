@@ -8,12 +8,15 @@ import { Minus, Plus, ShoppingCart, Heart, Loader2 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
+import useAuthStore from "@/store/auth";
 
 const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading }) => {
 
+    const token = useAuthStore.getState().token;
     const { data: favouriteIdsResponse } = useQuery({
         queryKey: ["favouriteIds"],
-        queryFn: () => api.get("/favourite/get-favourite-ids")
+        queryFn: () => api.get("/favourite/get-favourite-ids"),
+        enabled: !!token
     })
     const favouriteIds = favouriteIdsResponse?.data?.data || [];
 

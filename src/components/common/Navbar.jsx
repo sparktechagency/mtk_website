@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Heart, User, ShoppingBag, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, Moon, Sun } from "lucide-react";
+import { Search, Heart, User, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, Moon, Sun, ShoppingCart } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import useAuthStore from "@/store/auth";
@@ -223,7 +223,7 @@ const Navbar = () => {
                             {/* Shopping Cart Icon */}
                             <Link href="/cart">
                                 <Button variant="ghost" size="icon" className="relative">
-                                    <ShoppingBag className="h-5 w-5 text-subtitle" />
+                                    <ShoppingCart  className="h-5 w-5 text-subtitle" />
                                     <span className="sr-only">Shopping Cart</span>
                                     {/* Optional cart count badge */}
                                     {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span> */}

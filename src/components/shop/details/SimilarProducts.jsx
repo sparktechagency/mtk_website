@@ -6,15 +6,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 // import useAuthStore from "@/store/auth";
 import SimilarProductCard from "./SimilarProductCard";
 import api from "@/lib/api";
+import useAuthStore from "@/store/auth";
 
 const SimilarProducts = ({ relatedProducts }) => {
+  const token = useAuthStore.getState().token;
   const queryClient = useQueryClient();
   const { toggleFavouriteProduct, isLoadingIds } = useWishlistStore();
   // const token = useAuthStore((state) => state.token);
 
   const { data: favouriteIdsResponse } = useQuery({
     queryKey: ["favouriteIds"],
-    queryFn: () => api.get("/favourite/get-favourite-ids")
+    queryFn: () => api.get("/favourite/get-favourite-ids"),
+    enabled: !!token
   })
   const favouriteIds = favouriteIdsResponse?.data?.data || [];
 
@@ -46,6 +49,7 @@ const SimilarProducts = ({ relatedProducts }) => {
                 favouriteIds={favouriteIds}
                 isLoading={isLoadingIds?.has(product?._id)}
                 handleWishlistClick={handleWishlistClick}
+                token={token}
               />
             </CarouselItem>
           ))}

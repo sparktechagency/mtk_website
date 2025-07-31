@@ -38,7 +38,6 @@ const ShopPage = () => {
     // State for price range inputs and slider
     const [priceRange, setPriceRange] = useState([0, 500]);
     const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 500]);
-
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedPriceRange(priceRange);

@@ -1,14 +1,24 @@
 "use client"
 
-import { Mail, MapPin, Phone, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Mail, MapPin, Phone, Facebook, Instagram, Youtube } from "lucide-react";
+import { FaTelegramPlane } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
+import useWebsiteInfoStore from "@/store/websiteInfo";
 
 const Footer = () => {
+    const { info, fetchInfo } = useWebsiteInfoStore();
 
+    useEffect(() => {
+        if (!info) {
+            fetchInfo();
+        }
+    }, [info, fetchInfo]);
 
+    const { email, phone, address, instagram, telegram } = info || {};
 
     return (
         <footer
@@ -62,7 +72,7 @@ const Footer = () => {
                                     alt="TripleM Collectibles Logo"
                                     width={150}
                                     height={50}
-                                    style={{ width: '100%', height: 'auto'}}
+                                    style={{ width: '100%', height: 'auto' }}
                                 />
                             </div>
                             <p className="text-white/70 text-sm leading-relaxed">
@@ -102,15 +112,15 @@ const Footer = () => {
                             <address className="not-italic space-y-3 text-white/70 text-sm">
                                 <div className="flex items-start gap-3">
                                     <MapPin className="h-5 w-5 text-white/70 shrink-0 mt-1" />
-                                    <span>4517 Washington Ave. Manchester,<br />Kentucky 39495</span>
+                                    <span>{address}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Phone className="h-5 w-5 text-white/70 shrink-0" />
-                                    <span>(307) 555-0133</span>
+                                    <span>{phone}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Mail className="h-5 w-5 text-white/70 shrink-0" />
-                                    <span>debra.holt@example.com</span>
+                                    <span>{email}</span>
                                 </div>
                             </address>
                         </div>
@@ -123,11 +133,11 @@ const Footer = () => {
                     <div className="max-w-7xl mx-auto px-4 lg:px-0">
                         <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
                             <div className="flex space-x-6">
-                                <Link href="#" aria-label="Instagram" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
+                                <Link href={`${instagram}`} target="_blank" aria-label="Instagram" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
                                     <Instagram className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
                                 </Link>
-                                <Link href="#" aria-label="Twitter" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
-                                    <Twitter className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
+                                <Link href={`${telegram}`} target="_blank" aria-label="Twitter" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
+                                    <FaTelegramPlane className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
                                 </Link>
                                 <Link href="#" aria-label="Facebook" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
                                     <Facebook className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />

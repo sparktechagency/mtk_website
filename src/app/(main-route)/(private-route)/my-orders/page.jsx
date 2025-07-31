@@ -1,29 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import SimpleHero from "@/components/common/SimpleHero";
 import PageLayout from "@/components/layout/PageLayout";
 import OrderTable from "@/components/my-orders/OrderTable";
 import OrderCard from "@/components/my-orders/OrderCard";
 import ReviewModal from "@/components/my-orders/ReviewModal";
 import { getAllOrders } from "@/api/order/getAllOrders";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import Lottie from "lottie-react";
 import emptyAnimation from "../../../../../public/lottie/empty.json";
+import { toast } from "sonner";
+import { submitReview } from "@/api/review/submitReview";
 
 const MyOrdersPage = () => {
-
+    const queryClient = useQueryClient();
 
     const { data: ordersData, isLoading, isError } = useQuery({
         queryKey: ["orders"],
         queryFn: getAllOrders,
     });
 
-    const orders = ordersData || [];
+    const orders = ordersData?.data || []; 
 
-    const [isReviewModalOpen, setIsReviewModalOpen] = React.useState(false);
-    const [selectedOrder, setSelectedOrder] = React.useState(null);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     const heroLinks = [
         { name: "Home", href: "/" },
@@ -46,13 +49,32 @@ const MyOrdersPage = () => {
     };
 
     const handleReviewSubmit = (data) => {
-        console.log("Review Data for Order:", selectedOrder._id, data);
-        setIsReviewModalOpen(false);
-        setSelectedOrder(null);
+        const reviewBody = {
+            orderId: selectedOrder._id,
+            productId: data.productId,
+            star: data.rating,
+            comment: data.comment,
+        };
+        submitReviewMutation(reviewBody);
     };
 
-    const handleOpenReviewModal = (order) => {
+    const { mutate: submitReviewMutation, isPending: isSubmittingReview } = useMutation({
+        mutationFn: submitReview,
+        onSuccess: () => {
+            toast.success("Review submitted successfully!");
+            queryClient.invalidateQueries(["orders"]);
+            setIsReviewModalOpen(false);
+            setSelectedOrder(null);
+            setSelectedProduct(null);
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to submit review.");
+        },
+    });
+
+    const handleOpenReviewModal = (order, product) => {
         setSelectedOrder(order);
+        setSelectedProduct(product);
         setIsReviewModalOpen(true);
     };
 
@@ -62,13 +84,39 @@ const MyOrdersPage = () => {
                 <SimpleHero title="My Orders" links={heroLinks} />
                 <PageLayout>
                     <div className="overflow-x-auto">
-                        <div className="md:min-w-[800px]">
-                            <div className="flex flex-col gap-2 items-center justify-center h-[70%] text-subtitle text-lg col-span-full">
-                                <Skeleton className="h-4 w-full mb-4" />
+                        <div className="min-w-full bg-white rounded-md shadow-sm">
+                            {/* Table Header Skeleton */}
+                            <div className="grid grid-cols-6 gap-4 p-4 border-b border-gray-200">
+                                <Skeleton className="h-6 w-24" /> {/* Order ID */}
+                                <Skeleton className="h-6 w-20" /> {/* Date */}
+                                <Skeleton className="h-6 w-32" /> {/* Products */}
+                                <Skeleton className="h-6 w-16" /> {/* Total */}
+                                <Skeleton className="h-6 w-20" /> {/* Status */}
+                                <Skeleton className="h-6 w-16" /> {/* Action */}
                             </div>
-                            {Array.from({ length: 5 }).map((_, index) => (
-                                <Skeleton key={index} className="h-24 w-full mb-2" />
-                            ))}
+
+                            {/* Table Rows Skeleton */}
+                            <div className="p-4">
+                                {Array.from({ length: 7 }).map((_, rowIndex) => (
+                                    <div key={rowIndex} className="grid grid-cols-6 gap-4 py-3 border-b border-gray-100 last:border-b-0 items-center">
+                                        {/* Order ID */}
+                                        <Skeleton className="h-5 w-32" />
+                                        {/* Date */}
+                                        <Skeleton className="h-5 w-20" />
+                                        {/* Product (Image + Text) */}
+                                        <div className="flex items-center gap-2">
+                                            <Skeleton className="h-10 w-10 rounded-md" />
+                                            <Skeleton className="h-5 w-24" />
+                                        </div>
+                                        {/* Total */}
+                                        <Skeleton className="h-5 w-16" />
+                                        {/* Status */}
+                                        <Skeleton className="h-5 w-20 rounded-full" />
+                                        {/* Action Button */}
+                                        <Skeleton className="h-8 w-20 rounded-md" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </PageLayout>
@@ -121,7 +169,8 @@ const MyOrdersPage = () => {
                     isOpen={isReviewModalOpen}
                     onOpenChange={setIsReviewModalOpen}
                     onSubmit={handleReviewSubmit}
-                    // initialData={selectedProduct ? { rating: 0, comment: "", productId: selectedProduct.productId } : null}
+                    isSubmittingReview={isSubmittingReview}
+                    initialData={selectedProduct ? { rating: 0, comment: "", productId: selectedProduct.productId } : null}
                 />
             </PageLayout>
         </div>

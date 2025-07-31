@@ -1,11 +1,11 @@
 import api from "@/lib/api";
 
-export const getAllOrders = async () => {
+export const submitReview = async (reviewData) => {
     try {
-        const response = await api.get("/order/get-user-orders");
+        const response = await api.post("/review/create-review", reviewData);
         return response.data;
     } catch (error) {
         console.log(error);
         throw error;
     }
-}
+};

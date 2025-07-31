@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import StarRating from "./StarRating"
@@ -64,9 +64,12 @@ const ProductTabs = ({ product, reviewData }) => {
                   <div key={review._id} className="border border-gray-200 rounded-lg p-6">
                     <div className="flex items-start gap-4">
                       <Avatar className="h-12 w-12 flex-shrink-0">
-                        <AvatarImage src="/images/avatar (1).png" alt={review.fullName} />
                         <AvatarFallback className="bg-gray-200 text-gray-600 font-medium">
-                          {review.fullName.charAt(0)}
+                          {review.fullName ? (
+                            review.fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
+                          ) : (
+                            '?'
+                          )}
                         </AvatarFallback>
                       </Avatar>
 

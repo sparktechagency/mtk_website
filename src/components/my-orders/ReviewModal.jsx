@@ -5,7 +5,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; 
 import {
     Dialog,
     DialogContent,
@@ -14,15 +14,15 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 
 const reviewSchema = z.object({
     rating: z.number().min(1, "Please select a rating."),
     comment: z.string().min(6, "Comment must be at least 6 characters."),
-    productId: z.string().optional(), // Add productId to schema
+    productId: z.string().optional(),
 });
 
-const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
+const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData, isSubmittingReview }) => {
     const {
         register,
         handleSubmit,
@@ -35,25 +35,29 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
         defaultValues: {
             rating: initialData?.rating || 0,
             comment: initialData?.comment || "",
-            productId: initialData?.productId || "", // Set productId from initialData
+            productId: initialData?.productId || "",
         },
     });
 
     const rating = watch("rating");
-    const productId = watch("productId"); // Watch productId
+    const productId = watch("productId"); 
 
     React.useEffect(() => {
-        if (!isOpen) {
+        if (isOpen && initialData) {
+            setValue("rating", initialData.rating || 0);
+            setValue("comment", initialData.comment || "");
+            setValue("productId", initialData.productId || "");
+        } else if (!isOpen) {
             reset({
-                rating: initialData?.rating || 0,
-                comment: initialData?.comment || "",
-                productId: initialData?.productId || "",
+                rating: 0,
+                comment: "",
+                productId: "",
             });
         }
-    }, [isOpen, reset, initialData]);
+    }, [isOpen, initialData, setValue, reset]);
 
     const handleFormSubmit = (data) => {
-        onSubmit({ ...data, productId }); // Pass productId to onSubmit
+        onSubmit({ ...data, productId });
     };
 
     return (
@@ -99,8 +103,8 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData }) => {
                             )}
                         </div>
                     </div>
-                    <Button type="submit">
-                        Continue
+                    <Button disabled={isSubmittingReview} type="submit">
+                        {isSubmittingReview ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading</>: "Submit"}
                     </Button>
                 </form>
             </DialogContent>

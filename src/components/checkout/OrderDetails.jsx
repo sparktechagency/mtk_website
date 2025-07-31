@@ -14,7 +14,7 @@ const OrderDetails = ({ orderItems, subTotal, shippingFee, total }) => {
             </div>
 
             {/* Order Items List */}
-            {orderItems.map((item, index) => (
+            {orderItems?.map((item, index) => (
                 <React.Fragment key={item.id}>
                     <div className="flex items-center justify-between py-4">
                         <div className="flex items-center gap-4">
@@ -48,17 +48,17 @@ const OrderDetails = ({ orderItems, subTotal, shippingFee, total }) => {
             <div className="space-y-3 text-subtitle">
                 <div className="flex justify-between items-center">
                     <span>Sub Total:</span>
-                    <span className="font-semibold">${subTotal.toFixed(2)}</span>
+                    <span className="font-semibold">${subTotal?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                     <span>Shipping Fee:</span>
-                    <span className="font-semibold">${shippingFee.toFixed(2)}</span>
+                    <span className="font-semibold">${shippingFee?.toFixed(2)}</span>
                 </div>
             </div>
             <Separator className="my-6" />
             <div className="flex justify-between items-center text-lg font-bold text-title">
                 <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <span>${total?.toFixed(2)}</span>
             </div>
         </div>
     );

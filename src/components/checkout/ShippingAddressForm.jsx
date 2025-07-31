@@ -12,7 +12,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                     <Input
                         id="streetAddress"
                         placeholder="123 Main St"
-                        value={shippingAddress.street}
+                        value={shippingAddress?.street}
                         onChange={(e) =>
                             setShippingAddress({ ...shippingAddress, street: e.target.value })
                         }
@@ -25,7 +25,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                         <Input
                             id="city"
                             placeholder="New York"
-                            value={shippingAddress.city}
+                            value={shippingAddress?.city}
                             onChange={(e) =>
                                 setShippingAddress({ ...shippingAddress, city: e.target.value })
                             }
@@ -37,7 +37,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                         <Input
                             id="state"
                             placeholder="NY"
-                            value={shippingAddress.state}
+                            value={shippingAddress?.state}
                             onChange={(e) =>
                                 setShippingAddress({ ...shippingAddress, state: e.target.value })
                             }
@@ -50,7 +50,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                     <Input
                         id="zipCode"
                         placeholder="10001"
-                        value={shippingAddress.zipCode}
+                        value={shippingAddress?.zipCode}
                         onChange={(e) =>
                             setShippingAddress({ ...shippingAddress, zipCode: e.target.value })
                         }

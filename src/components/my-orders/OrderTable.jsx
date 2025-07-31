@@ -19,9 +19,9 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
         <Table className="hidden md:table">
             <TableHeader>
                 <TableRow>
-                    <TableHead>Order Number</TableHead>
+                    <TableHead>Order ID</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Product</TableHead>
+                    <TableHead>Products</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                     <TableHead className="text-center">Status</TableHead>
                     <TableHead className="text-center">Action</TableHead>
@@ -29,27 +29,31 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
             </TableHeader>
             <TableBody>
                 {orders.map((order) => (
-                    <TableRow key={order.id}>
-                        <TableCell className="font-medium">{order.orderNumber}</TableCell>
-                        <TableCell>{order.date}</TableCell>
+                    <TableRow key={order._id}>
+                        <TableCell className="font-medium">{order._id.slice(0, 8)}...</TableCell>
+                        <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell>
-                            <div className="flex items-center gap-4">
-                                <div className="relative w-16 h-16 shrink-0 rounded-md overflow-hidden border">
-                                    <Image
-                                        src={order.product.image}
-                                        alt={order.product.name}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-md"
-                                    />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="font-medium text-title">{order.product.name}</span>
-                                    <span className="text-sm text-subtitle">Qty: {order.product.qty}</span>
-                                </div>
+                            <div className="flex flex-col gap-2">
+                                {order.products.map((product) => (
+                                    <div key={product.productId} className="flex items-center gap-2">
+                                        <div className="relative w-12 h-12 shrink-0 rounded-md overflow-hidden border">
+                                            <Image
+                                                src={product.image}
+                                                alt={product.name}
+                                                layout="fill"
+                                                objectFit="cover"
+                                                className="rounded-md"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="font-medium text-title">{product.name}</span>
+                                            <span className="text-sm text-subtitle">Qty: {product.quantity}</span>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </TableCell>
-                        <TableCell className="text-right font-semibold">${order.total.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-semibold">${order.totalPrice.toFixed(2)}</TableCell>
                         <TableCell className={`text-center font-medium ${getStatusColor(order.status)}`}>
                             {order.status}
                         </TableCell>
@@ -58,8 +62,8 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        className={`text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "Delivered" ? "text-subtitle border-gray-400" : ""}`}
-                                        disabled={order.status !== "Delivered"}
+                                        className={`text-primary hover:bg-primary/5 border-primary/20 ${order.status !== "delivered" || order.products.every(p => p.isReview) ? "text-subtitle border-gray-400" : ""}`}
+                                        disabled={order.status !== "delivered" || order.products.every(p => p.isReview)}
                                         onClick={() => onReview(order)}
                                     >
                                         Review

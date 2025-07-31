@@ -27,8 +27,10 @@ import {
 } from "@/components/ui/pagination";
 import Lottie from "lottie-react";
 import { useWishlistStore } from "@/store/wishlistStore";
+import useAuthStore from "@/store/auth";
 
 const ShopPage = () => {
+    const token = useAuthStore.getState().token;
 
     const { toggleFavouriteProduct } = useWishlistStore();
     const queryClient = useQueryClient();
@@ -162,7 +164,8 @@ const ShopPage = () => {
 
     const { data: favouriteIdsResponse } = useQuery({
         queryKey: ["favouriteIds"],
-        queryFn: () => api.get("/favourite/get-favourite-ids")
+        queryFn: () => api.get("/favourite/get-favourite-ids"),
+        enabled: !!token
     })
     const favouriteIds = favouriteIdsResponse?.data?.data || [];
 

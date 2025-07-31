@@ -13,7 +13,7 @@ const TrendingCarousel = () => {
   const handleWishlistClick = (e, productId) => {
     e.stopPropagation();
     // Add your wishlist logic here
-    console.log(`Product ${productId} added to wishlist`);
+    console.log(`Product ${productId} added to wishlist`); 
   };
 
   return (

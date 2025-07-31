@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSingleProduct } from "@/api/product/getSIngleProduct";
 import DetailsPageSkeleton from "@/components/shop/details/DetailsPageSkeleton";
 import { addToCart } from "@/api/product/addToCart";
+import api from "@/lib/api";
 
 const DetailsPage = () => {
     const params = useParams();
@@ -30,8 +31,6 @@ const DetailsPage = () => {
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
-
-    // console.log("from usestate",quantity);
 
     React.useEffect(() => {
         if (product) {
@@ -89,6 +88,16 @@ const DetailsPage = () => {
 
     }
 
+    const {data: reviewData} = useQuery({
+        queryKey: ["review", productId],
+        queryFn: ({ queryKey }) => {
+            const [, productId] = queryKey;
+            return api.get(`/review/get-user-product-reviews/${productId}`);
+        },
+        enabled: !!productId
+    })
+
+
     if (isLoading) {
         return <DetailsPageSkeleton />;
     }
@@ -117,10 +126,10 @@ const DetailsPage = () => {
                     />
                 </div>
 
-                <ProductTabs product={product} />
+                <ProductTabs product={product} reviewData={reviewData} />
 
                 {/* Similar Products */}
-                <SimilarProducts relatedProducts={relatedProducts} />
+                <SimilarProducts relatedProducts={relatedProducts}/>
 
             </PageLayout>
         </div>

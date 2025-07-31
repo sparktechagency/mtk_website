@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator'; 
 import { Loader2 } from 'lucide-react';
@@ -19,11 +18,11 @@ const OrderSummary = ({ totalItems, subTotal, handleCheckout , isCheckoutLoading
                 </div>
             </div>
             <Separator className="my-6" />
-            <Link href="/cart/checkout" className="w-full">
+            <div className="w-full">
                 <Button disabled={isCheckoutLoading || totalItems === 0} onClick={handleCheckout} className="w-full font-medium py-3">
                     {isCheckoutLoading ? <><Loader2 className=" h-4 w-4 animate-spin" /> Checking out</> : "Checkout"}
                 </Button>
-            </Link>
+            </div>
         </div>
     );
 };

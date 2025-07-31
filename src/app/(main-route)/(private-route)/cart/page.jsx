@@ -14,8 +14,10 @@ import OrderSummary from "@/components/cart/OrderSummary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { checkout } from "@/api/product/checkout";
+import { useRouter } from "next/navigation";
 
 const CartPage = () => {
+    const router = useRouter();
     const queryClient = useQueryClient();
 
     const { data: cartItems, isLoading, isError } = useQuery({
@@ -70,11 +72,12 @@ const CartPage = () => {
         0
     ) || 0;
 
-    const {mutate : checkoutMutation, isLoading: isCheckoutLoading} = useMutation({
+    const {mutate : checkoutMutation, isPending: isCheckoutLoading} = useMutation({
         mutationFn: checkout,
         onSuccess: () => {
             toast.success("Checkout successful");
             queryClient.invalidateQueries(["cart"]);
+            router.push("/my-orders");
         },
         onError: () => {
             toast.error("Failed to checkout");

@@ -5,7 +5,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
     return (
         <div className="p-6 rounded-lg border h-fit">
             <h2 className="text-2xl font-medium text-title mb-6">Shipping Address</h2>
-            <div className="space-y-4 mb-8">
+            <from className="space-y-4 mb-8">
                 <div className="grid grid-cols-1 gap-2">
                     <Label htmlFor="streetAddress">Street Address</Label>
                     <Input
@@ -56,7 +56,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                         className="h-12 text-base"
                     />
                 </div>
-            </div>
+            </from>
         </div>
     );
 };

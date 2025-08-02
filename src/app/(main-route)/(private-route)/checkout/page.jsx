@@ -10,7 +10,6 @@ import { useGetShippingAddress } from "@/hooks/useGetShippingAddress";
 
 const CheckOutPage = () => {
 
-    
     const [shippingAddress, setShippingAddress] = useState({
         streetAddress: "",
         city: "",
@@ -26,7 +25,7 @@ const CheckOutPage = () => {
             setShippingAddress(addressData);
         }
     }, [addressData]);
-
+    
     
 
     const heroLinks = [

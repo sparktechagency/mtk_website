@@ -10,12 +10,13 @@ import EditProfileTab from "@/components/profile/EditProfileTab";
 import ChangePasswordTab from "@/components/profile/ChangePasswordTab";
 import ChangeAddressTab from "@/components/profile/ChangeAddressTab";
 import { useGetMe } from "@/hooks/useGetMe";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "@/api/user/updateProfile";
 import { toast } from "sonner";
 import { updatePassword } from "@/api/user/updatePassword";
-import { getShippingAddress } from "@/api/user/getShippingAddress";
+// import { getShippingAddress } from "@/api/user/getShippingAddress";
 import { updateShippingAddress } from "@/api/user/updateShippingAddress";
+import { useGetShippingAddress } from "@/hooks/useGetShippingAddress";
 
 const ProfilePage = () => {
     const queryClient = useQueryClient();
@@ -56,14 +57,11 @@ const ProfilePage = () => {
         }
     })
 
-    // Get Address
-    const { data: addressData, isPending: isAddressPending } = useQuery({
-        queryKey: ["shipping-address"],
-        queryFn: getShippingAddress,
-    })
+    // Get Shipping Address
+    const { addressData, isAddressPending } = useGetShippingAddress()
 
     // Update Address
-    const {mutate: mutateAddress, isPending: isAddressUpdatePending} = useMutation({
+    const { mutate: mutateAddress, isPending: isAddressUpdatePending } = useMutation({
         mutationFn: updateShippingAddress,
         onSuccess: () => {
             toast.success("Address updated successfully.");

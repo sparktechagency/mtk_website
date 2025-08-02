@@ -1,6 +1,5 @@
-import React from 'react';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
     return (
@@ -11,10 +10,10 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                     <Label htmlFor="streetAddress">Street Address</Label>
                     <Input
                         id="streetAddress"
-                        placeholder="123 Main St"
-                        value={shippingAddress?.street}
+                        placeholder={shippingAddress?.streetAddress || "123 Main St"}
+                        value={shippingAddress?.streetAddress}
                         onChange={(e) =>
-                            setShippingAddress({ ...shippingAddress, street: e.target.value })
+                            setShippingAddress({ ...shippingAddress, streetAddress: e.target.value })
                         }
                         className="h-12 text-base"
                     />
@@ -24,7 +23,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                         <Label htmlFor="city">City</Label>
                         <Input
                             id="city"
-                            placeholder="New York"
+                            placeholder={shippingAddress?.city || "New York"}
                             value={shippingAddress?.city}
                             onChange={(e) =>
                                 setShippingAddress({ ...shippingAddress, city: e.target.value })
@@ -36,7 +35,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                         <Label htmlFor="state">State</Label>
                         <Input
                             id="state"
-                            placeholder="NY"
+                            placeholder={shippingAddress?.state || "NY"}
                             value={shippingAddress?.state}
                             onChange={(e) =>
                                 setShippingAddress({ ...shippingAddress, state: e.target.value })
@@ -49,7 +48,7 @@ const ShippingAddressForm = ({ shippingAddress, setShippingAddress }) => {
                     <Label htmlFor="zipCode">Zip Code</Label>
                     <Input
                         id="zipCode"
-                        placeholder="10001"
+                        placeholder={shippingAddress?.zipCode || "10001"}
                         value={shippingAddress?.zipCode}
                         onChange={(e) =>
                             setShippingAddress({ ...shippingAddress, zipCode: e.target.value })

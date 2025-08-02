@@ -34,7 +34,7 @@ export function SignUpForm({ className, ...props }) {
       toast.success("Please check your email to verify your account!");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Sign up failed. Please check your credentials.");
+      toast.error(error?.message || "Sign up failed. Please check your credentials.");
     },
   });
 

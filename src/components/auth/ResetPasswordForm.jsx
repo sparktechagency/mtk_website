@@ -55,7 +55,7 @@ export function ResetPasswordForm({ className, ...props }) {
       router.push("/auth/login")
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Password reset failed.");
+      toast.error(error?.message || "Password reset failed.");
     },
   })
 

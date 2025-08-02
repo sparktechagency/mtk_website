@@ -64,7 +64,7 @@ const DetailsPage = () => {
             queryClient.invalidateQueries(["cart"]);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to add product to cart.");
+            toast.error(error?.message || "Failed to add product to cart.");
         }
     })
 

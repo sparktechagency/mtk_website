@@ -68,7 +68,7 @@ const MyOrdersPage = () => {
             setSelectedProduct(null);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || "Failed to submit review.");
+            toast.error(error?.message || "Failed to submit review."); 
         },
     });
 
@@ -84,7 +84,7 @@ const MyOrdersPage = () => {
                 <SimpleHero title="My Orders" links={heroLinks} />
                 <PageLayout>
                     <div className="overflow-x-auto">
-                        <div className="min-w-full bg-white rounded-md shadow-sm">
+                        <div className="min-w-full rounded-md shadow-sm">
                             {/* Table Header Skeleton */}
                             <div className="grid grid-cols-6 gap-4 p-4 border-b border-gray-200">
                                 <Skeleton className="h-6 w-24" /> {/* Order ID */}

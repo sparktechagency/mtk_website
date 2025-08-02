@@ -5,7 +5,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,7 +14,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Star } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import StarRating from "../shop/details/StarRating";
 
 const reviewSchema = z.object({
     rating: z.number().min(1, "Please select a rating."),
@@ -40,7 +41,7 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData, isSubmitting
     });
 
     const rating = watch("rating");
-    const productId = watch("productId"); 
+    const productId = watch("productId");
 
     React.useEffect(() => {
         if (isOpen && initialData) {
@@ -74,16 +75,21 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData, isSubmitting
                         <div className="flex flex-col gap-2">
                             <span className="text-sm font-medium">Rating:</span>
                             <div className="space-x-2">
-                                {[1, 2, 3, 4, 5].map((star) => (
+                                {/* {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
                                         type="button" // Prevent form submission
                                         onClick={() => setValue("rating", star)}
-                                        className={`${star <= rating ? "text-primary" : "text-subtitle"}`}
+                                        className={`${star <= rating ? "text-primary fill-primary" : "text-subtitle"}`}
                                     >
                                         <Star size={20} />
                                     </button>
-                                ))}
+                                ))} */}
+                                <StarRating
+                                    rating={rating}
+                                    onStarClick={(star) => setValue("rating", star)}
+                                    containerClassName="space-x-2"
+                                />
                                 {errors.rating && (
                                     <p className="text-red-500 text-xs ml-1">{errors.rating.message}</p>
                                 )}
@@ -104,7 +110,7 @@ const ReviewModal = ({ isOpen, onOpenChange, onSubmit, initialData, isSubmitting
                         </div>
                     </div>
                     <Button disabled={isSubmittingReview} type="submit">
-                        {isSubmittingReview ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading</>: "Submit"}
+                        {isSubmittingReview ? <><Loader2 className="h-4 w-4 animate-spin" />Loading</> : "Submit"}
                     </Button>
                 </form>
             </DialogContent>

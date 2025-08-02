@@ -66,7 +66,7 @@ export function VerificationForm({ className, ...props }) {
       router.push("/auth/reset-password");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Verification failed.");
+      toast.error(error?.message || "Verification failed.");
     },
   })
 
@@ -78,7 +78,7 @@ export function VerificationForm({ className, ...props }) {
       setCanResend(false);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to send new OTP.");
+      toast.error(error?.message || "Failed to send new OTP.");
     },
   });
 

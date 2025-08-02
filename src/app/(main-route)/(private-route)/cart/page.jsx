@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query"; 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCartItem } from "@/api/product/deleteCartItem";
 import { updateCartItem } from "@/api/product/updateCartItem";
 import { Separator } from "@/components/ui/separator";
@@ -14,13 +14,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { checkout } from "@/api/product/checkout";
 import { useRouter } from "next/navigation";
-import useCart from "@/hooks/useCart";
+import useCartStore from "@/store/cartStore";
 
 const CartPage = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    const { cart: cartItems, isLoading, isError } = useCart();
+    const {
+        cart: cartItems,
+        isLoading,
+        isError,
+    } = useCartStore((state) => state);
 
     const deleteMutation = useMutation({
         mutationFn: deleteCartItem,
@@ -69,7 +73,7 @@ const CartPage = () => {
         0
     ) || 0;
 
-    const {mutate : checkoutMutation, isPending: isCheckoutLoading} = useMutation({
+    const { mutate: checkoutMutation, isPending: isCheckoutLoading } = useMutation({
         mutationFn: checkout,
         onSuccess: () => {
             toast.success("Checkout successful");
@@ -104,10 +108,32 @@ const CartPage = () => {
                             {/* Product Items */}
                             {isLoading ? (
                                 <div className="space-y-4">
-                                    <Skeleton className="h-24 w-full" />
-                                    <Skeleton className="h-24 w-full" />
-                                    <Skeleton className="h-24 w-full" />
+                                    {[...Array(3)].map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className="flex items-center justify-between w-full p-4 border rounded-md"
+                                        >
+                                            {/* Image skeleton */}
+                                            <Skeleton className="h-16 w-16 rounded-md" />
+
+                                            {/* Text skeleton */}
+                                            <div className="flex-1 ml-4 space-y-2">
+                                                <Skeleton className="h-4 w-32" />
+                                                <Skeleton className="h-4 w-20" />
+                                            </div>
+
+                                            {/* Quantity skeleton */}
+                                            <Skeleton className="h-8 w-20 mx-4" />
+
+                                            {/* Total price skeleton */}
+                                            <Skeleton className="h-4 w-12" />
+
+                                            {/* Delete icon skeleton */}
+                                            <Skeleton className="h-6 w-6 ml-4" />
+                                        </div>
+                                    ))}
                                 </div>
+
                             ) : isError ? (
                                 <div className="text-center py-10 text-red-500">Failed to load cart items.</div>
                             ) : !cartItems || cartItems.length === 0 ? (

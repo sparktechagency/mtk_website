@@ -13,7 +13,8 @@ import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
-import useCart from "@/hooks/useCart";
+import useInitializeCart from "@/hooks/useCart";
+import useCartStore from "@/store/cartStore";
 import { toast } from "sonner";
 
 
@@ -22,7 +23,8 @@ const Navbar = () => {
     const token = useAuthStore.getState().token;
     const clearToken = useAuthStore.getState().clearToken;
     const { user, isLoading } = useGetMe();
-    const { cart } = useCart();
+    useInitializeCart();
+    const cart = useCartStore((state) => state.cart);
     const handleAuthRedirect = useAuthRedirect();
 
     const isLoggedIn = !!token && !!user;

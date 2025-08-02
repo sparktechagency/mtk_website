@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useCart from "@/hooks/useCart";
+import { toast } from "sonner";
 
 
 const Navbar = () => {
@@ -39,7 +40,8 @@ const Navbar = () => {
 
     const handleLogOut = () => {
         clearToken();
-        // window.location.href = "/auth/login";
+        toast.success("Logout successful!");
+        window.location.reload();
     }
 
     return (

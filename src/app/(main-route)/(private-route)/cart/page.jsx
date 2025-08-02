@@ -110,7 +110,7 @@ const CartPage = () => {
                                 </div>
                             ) : isError ? (
                                 <div className="text-center py-10 text-red-500">Failed to load cart items.</div>
-                            ) : cartItems.length === 0 ? (
+                            ) : !cartItems || cartItems.length === 0 ? (
                                 <div className="text-center py-10 text-subtitle">Your cart is empty.</div>
                             ) : (
                                 cartItems.map((item, index) => (

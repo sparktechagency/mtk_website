@@ -13,6 +13,8 @@ import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { sendMessage } from "@/api/contact/sendMessage";
 import { toast } from "sonner";
+import useWebsiteInfoStore from "@/store/websiteInfo";
+import { useEffect } from "react";
 
 const heroLinks = [
     { name: "Home", href: "/" },
@@ -26,6 +28,15 @@ const formSchema = z.object({
 });
 
 const ContactPage = () => {
+
+    const { info, fetchInfo } = useWebsiteInfoStore();
+    useEffect(() => {
+        if (!info) {
+            fetchInfo();
+        }
+    }, [info, fetchInfo]);
+    const { email, phone, address } = info || {};
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(formSchema)
     });
@@ -59,21 +70,21 @@ const ContactPage = () => {
                                 <MapPin className="w-6 h-6 mr-3 text-primary mt-1" />
                                 <div>
                                     <p className="text-sm font-medium text-title">Location:</p>
-                                    <p className="text-sm text-subtitle">6391 Elgin St. Celina, Delaware 10299</p>
+                                    <p className="text-sm text-subtitle">{address || "Address not available"}</p>
                                 </div>
                             </div>
                             <div className="flex items-start p-4 rounded-lg shadow-sm">
                                 <Mail className="w-6 h-6 mr-3 text-primary mt-1" />
                                 <div>
                                     <p className="text-sm font-medium text-title">Email:</p>
-                                    <p className="text-sm text-subtitle">info@mtkecommerceweb.com</p>
+                                    <p className="text-sm text-subtitle">{email || "Email not available"}</p>
                                 </div>
                             </div>
                             <div className="flex items-start p-4 rounded-lg shadow-sm">
                                 <Phone className="w-6 h-6 mr-3 text-primary mt-1" />
                                 <div>
                                     <p className="text-sm font-medium text-title">Phone:</p>
-                                    <p className="text-sm text-subtitle">+974 4491 3355</p>
+                                    <p className="text-sm text-subtitle">{phone || "Phone not available"}</p>
                                 </div>
                             </div>
                         </div>

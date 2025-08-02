@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { CheckCheck } from "lucide-react";
 
 const OrderTable = ({ orders, getStatusColor, onReview }) => {
     return (
@@ -68,7 +69,7 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
                                                 disabled={order?.status !== "delivered" || product?.isReview}
                                                 onClick={() => onReview(order, product)}
                                             >
-                                                {product?.isReview ? "Reviewed" : "Review"}
+                                                {product?.isReview ?<><CheckCheck color="#1abe56" />Reviewed</> : "Review"}
                                             </Button>
                                         </DialogTrigger>
                                     </Dialog>

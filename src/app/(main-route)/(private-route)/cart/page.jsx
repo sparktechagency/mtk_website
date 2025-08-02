@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCart } from "@/api/product/getCart";
+import { useMutation, useQueryClient } from "@tanstack/react-query"; 
 import { deleteCartItem } from "@/api/product/deleteCartItem";
 import { updateCartItem } from "@/api/product/updateCartItem";
 import { Separator } from "@/components/ui/separator";
@@ -15,15 +14,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { checkout } from "@/api/product/checkout";
 import { useRouter } from "next/navigation";
+import useCart from "@/hooks/useCart";
 
 const CartPage = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    const { data: cartItems, isLoading, isError } = useQuery({
-        queryKey: ["cart"],
-        queryFn: getCart,
-    });
+    const { cart: cartItems, isLoading, isError } = useCart();
 
     const deleteMutation = useMutation({
         mutationFn: deleteCartItem,

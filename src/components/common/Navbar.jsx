@@ -13,6 +13,7 @@ import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
+import useCart from "@/hooks/useCart";
 
 
 const Navbar = () => {
@@ -20,6 +21,7 @@ const Navbar = () => {
     const token = useAuthStore.getState().token;
     const clearToken = useAuthStore.getState().clearToken;
     const { user, isLoading } = useGetMe();
+    const { cart } = useCart();
     const handleAuthRedirect = useAuthRedirect();
 
     const isLoggedIn = !!token && !!user;
@@ -240,8 +242,9 @@ const Navbar = () => {
                                 <Button variant="ghost" size="icon" className="relative">
                                     <ShoppingCart className="h-5 w-5 text-subtitle" />
                                     <span className="sr-only">Shopping Cart</span>
-                                    {/* Optional cart count badge */}
-                                    {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span> */}
+                                    {cart && cart.length > 0 && (
+                                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">{cart?.length}</span>
+                                    )}
                                 </Button>
                             </div>
 

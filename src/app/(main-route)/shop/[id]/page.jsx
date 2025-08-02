@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import ProductImageGallery from "@/components/shop/details/ProductImageGallery";
 import ProductInfo from "@/components/shop/details/ProductInfo";
 import ProductTabs from "@/components/shop/details/ProductTabs";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSingleProduct } from "@/api/product/getSIngleProduct";
 import DetailsPageSkeleton from "@/components/shop/details/DetailsPageSkeleton";
 import { addToCart } from "@/api/product/addToCart";
@@ -19,6 +19,7 @@ const DetailsPage = () => {
     const token = useAuthStore.getState().token;
     const params = useParams();
     const { id: productId } = params;
+    const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery({
         queryKey: ["product", productId],
@@ -60,6 +61,7 @@ const DetailsPage = () => {
         mutationFn: addToCart,
         onSuccess: () => {
             toast.success("Product added to cart successfully.");
+            queryClient.invalidateQueries(["cart"]);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Failed to add product to cart.");

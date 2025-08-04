@@ -65,7 +65,6 @@ export function ResetPasswordForm({ className, ...props }) {
       otp: resetPassOTP,
       password: data?.newPassword
     };
-    console.log(credential);
     mutate(credential);
   };
 

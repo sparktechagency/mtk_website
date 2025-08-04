@@ -24,8 +24,6 @@ const Wishlist = () => {
     const favoriteProducts = wishlistResponse?.data?.data || [];
     const totalProducts = wishlistResponse?.data?.meta?.total || 0;
 
-    console.log(wishlistResponse);
-
     const heroLinks = [
         { name: "Home", href: "/" },
         { name: "Favorite", isCurrent: true }

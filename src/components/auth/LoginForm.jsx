@@ -35,7 +35,6 @@ export function LoginForm({ className, ...props }) {
       router.push("/");
     },
     onError: (error) => {
-      console.log(error);
       toast.error(error?.response?.data?.message || "Login failed. Please check your credentials.");
     },
   });

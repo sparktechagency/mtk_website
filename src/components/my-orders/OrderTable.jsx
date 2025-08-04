@@ -14,8 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CheckCheck } from "lucide-react";
+import { getStatusColor } from "@/lib/utils";
 
-const OrderTable = ({ orders, getStatusColor, onReview }) => {
+const OrderTable = ({ orders, onReview }) => {
     return (
         <Table className="hidden md:table">
             <TableHeader>
@@ -25,6 +26,7 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
                     <TableHead>Products</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                     <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Payment Status</TableHead>
                     <TableHead className="text-center">Action</TableHead>
                 </TableRow>
             </TableHeader>
@@ -57,6 +59,9 @@ const OrderTable = ({ orders, getStatusColor, onReview }) => {
                         <TableCell className="text-right font-semibold">${order?.totalPrice.toFixed(2)}</TableCell>
                         <TableCell className={`text-center font-medium capitalize ${getStatusColor(order?.status)}`}>
                             {order?.status}
+                        </TableCell>
+                        <TableCell className={`text-center font-medium capitalize ${getStatusColor(order?.paymentStatus)}`}>
+                            {order?.paymentStatus}
                         </TableCell>
                         <TableCell className="text-center">
                             <div className="flex flex-col gap-2">

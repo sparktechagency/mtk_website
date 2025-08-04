@@ -12,11 +12,11 @@ import { toast } from 'sonner';
 
 const SuccessContent = () => {
   const params = useSearchParams();
-  const sessionId = params.get('session_Id');
+  const sessionId = params.get('session_id');
 
   const { isPending, isError, error } = useQuery({
     queryKey: ['verify-session', sessionId],
-    queryFn: () => api.get(`/order/verify-session?session_Id=${sessionId}`),
+    queryFn: () => api.get(`/order/verify-session?sessionId=${sessionId}`),
     enabled: !!sessionId, // Only run if sessionId exists
     retry: false, // Optional: prevent retrying on failure
     onSuccess: (data) => {

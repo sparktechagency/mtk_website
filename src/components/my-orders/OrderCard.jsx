@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { getStatusColor } from "@/lib/utils";
 
-const OrderCard = ({ order, getStatusColor, onReview }) => {
+
+const OrderCard = ({ order, onReview }) => {
     return (
         <div className="border rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-start">
@@ -13,7 +15,13 @@ const OrderCard = ({ order, getStatusColor, onReview }) => {
                     <span className="text-sm font-medium text-title">Order ID: {order.token}</span>
                     <span className="text-xs text-subtitle">{new Date(order.createdAt).toLocaleDateString()}</span>
                 </div>
-                <span className={`text-sm font-medium capitalize ${getStatusColor(order.status)}`}>{order.status}</span>
+                <div className="flex flex-col items-end">
+                    <span className={`text-sm font-medium capitalize ${getStatusColor(order.status)}`}>{order.status}</span>
+                    <div className="flex gap-2 items-end mt-1">
+                        <span className="text-xs text-subtitle">Payment Status: </span>
+                        <span className={`text-xs font-medium capitalize ${getStatusColor(order.paymentStatus)}`}>({order.paymentStatus})</span>
+                    </div>
+                </div>
             </div>
             <div className="flex flex-col gap-3">
                 {order.products.map((product) => (

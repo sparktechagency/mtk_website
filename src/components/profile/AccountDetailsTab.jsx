@@ -5,7 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "../ui/skeleton";
 
-const AccountDetailsTab = ({ user, setActiveTab, addressData, isUserLoading, isAddressPending }) => {
+const AccountDetailsTab = ({ user, setActiveTab, addressData, isUserLoading, isAddressPending }) => { 
     const address = `${addressData?.streetAddress}, ${addressData?.city}, ${addressData?.state}, ${addressData?.zipCode}`
     return (
         <div>

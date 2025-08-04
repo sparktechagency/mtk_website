@@ -14,9 +14,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "@/api/user/updateProfile";
 import { toast } from "sonner";
 import { updatePassword } from "@/api/user/updatePassword";
-// import { getShippingAddress } from "@/api/user/getShippingAddress";
-import { updateShippingAddress } from "@/api/user/updateShippingAddress";
 import { useGetShippingAddress } from "@/hooks/useGetShippingAddress";
+import { useUpdateShippingAddress } from "@/hooks/useUpdateShippingAddress";
 
 const ProfilePage = () => {
     const queryClient = useQueryClient();
@@ -43,7 +42,7 @@ const ProfilePage = () => {
             queryClient.invalidateQueries({ queryKey: ["user"] });
         },
         onError: (error) => {
-            toast.error(error?.message || "Failed to update profile.");
+            toast.error(error?.message || "Failed to update profile."); 
         }
     })
     // Update Password
@@ -61,16 +60,7 @@ const ProfilePage = () => {
     const { addressData, isAddressPending } = useGetShippingAddress()
 
     // Update Address
-    const { mutate: mutateAddress, isPending: isAddressUpdatePending } = useMutation({
-        mutationFn: updateShippingAddress,
-        onSuccess: () => {
-            toast.success("Address updated successfully.");
-            queryClient.invalidateQueries({ queryKey: ["shipping-address"] });
-        },
-        onError: (error) => {
-            toast.error(error?.message || "Failed to update address.");
-        }
-    })
+    const { mutateAddress, isAddressUpdatePending, isAddressUpdateSuccess } = useUpdateShippingAddress()
 
     // Update Profile
     const handleUpdateProfile = (data) => {
@@ -105,6 +95,9 @@ const ProfilePage = () => {
 
     const handleUpdateAddress = (data) => {
         mutateAddress(data)
+        if (isAddressUpdateSuccess) {
+            toast.success("Address updated successfully.");
+        }
     }
 
 

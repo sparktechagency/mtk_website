@@ -12,7 +12,6 @@ import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { checkout } from "@/api/product/checkout";
 import { useRouter } from "next/navigation";
 import useCartStore from "@/store/cartStore";
 
@@ -73,20 +72,8 @@ const CartPage = () => {
         0
     ) || 0;
 
-    const { mutate: checkoutMutation, isPending: isCheckoutLoading } = useMutation({
-        mutationFn: checkout,
-        onSuccess: () => {
-            toast.success("Checkout successful");
-            queryClient.invalidateQueries(["cart"]);
-            router.push("/my-orders");
-        },
-        onError: () => {
-            toast.error("Failed to checkout");
-        }
-    })
-
     const handleCheckout = () => {
-        checkoutMutation()
+        router.push("/checkout");
     };
 
     const heroLinks = [
@@ -153,7 +140,7 @@ const CartPage = () => {
                         </div>
 
                         {/* Order Overview */}
-                        <OrderSummary totalItems={totalItems} subTotal={subTotal} handleCheckout={handleCheckout} isCheckoutLoading={isCheckoutLoading} />
+                        <OrderSummary totalItems={totalItems} subTotal={subTotal} handleCheckout={handleCheckout} />
                     </div>
                 </div>
             </PageLayout>

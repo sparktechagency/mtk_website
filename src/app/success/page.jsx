@@ -1,34 +1,31 @@
 'use client';
 
-import React, { Suspense, useEffect } from 'react';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import React, { Suspense } from 'react';
+import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import PageLayout from '@/components/layout/PageLayout';
 import api from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 const SuccessContent = () => {
   const params = useSearchParams();
-  const sessionId = params.get('session_id');
+  const sessionId = params.get('session_Id');
 
-  const { mutate: verifySession, isPending } = useMutation({
-    mutationFn: (sessionId) => api.post(`/order/verify-session?session_id=${sessionId}`),
+  const { isPending, isError, error } = useQuery({
+    queryKey: ['verify-session', sessionId],
+    queryFn: () => api.get(`/order/verify-session?session_Id=${sessionId}`),
+    enabled: !!sessionId, // Only run if sessionId exists
+    retry: false, // Optional: prevent retrying on failure
     onSuccess: (data) => {
       toast.success(data?.message);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed to verify session.');
+      toast.error(error?.response?.data?.message || "There was an issue confirming your payment.");
     }
   });
-
-  useEffect(() => {
-    if (sessionId) {
-      verifySession(sessionId);
-    }
-  }, [sessionId, verifySession]);
 
   if (isPending) {
     return (
@@ -36,6 +33,16 @@ const SuccessContent = () => {
         <Loader2 className="w-16 h-16 text-primary animate-spin mb-6" />
         <h1 className="text-2xl font-bold text-title mb-4">Verifying Your Payment</h1>
         <p className="text-lg text-subtitle">Please wait a moment, we are confirming your transaction.</p>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto py-16 flex flex-col items-center justify-center text-center min-h-[60vh]">
+        <AlertTriangle className="w-16 h-16 text-red-500 mb-6" />
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Payment Verification Failed</h1>
+        <p className="text-lg text-subtitle">{error?.response?.data?.message || "There was an issue confirming your payment."}</p>
       </div>
     )
   }

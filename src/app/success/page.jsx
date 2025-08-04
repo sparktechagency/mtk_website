@@ -8,19 +8,19 @@ import PageLayout from '@/components/layout/PageLayout';
 import api from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const SuccessContent = () => {
   const params = useSearchParams();
-  const sessionId = params.get('sessionId');
-  console.log(sessionId);
+  const sessionId = params.get('session_id');
 
   const { mutate: verifySession, isPending } = useMutation({
-    mutationFn: (sessionId) => api.post(`/order/verify-session?sessionId=${sessionId}`),
+    mutationFn: (sessionId) => api.post(`/order/verify-session?session_id=${sessionId}`),
     onSuccess: (data) => {
-      console.log("Session verified:", data);
+      toast.success(data?.message);
     },
     onError: (error) => {
-      console.error("Session verification failed:", error);
+      toast.error(error?.response?.data?.message || 'Failed to verify session.');
     }
   });
 

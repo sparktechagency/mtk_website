@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, MapPin, Phone, Facebook, Instagram, Youtube } from "lucide-react";
+import { Mail, MapPin, Phone, Facebook, Instagram, Youtube, Loader2 } from "lucide-react";
 import { FaTelegramPlane } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,8 +8,20 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
 import useWebsiteInfoStore from "@/store/websiteInfo";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/lib/api";
+import { useForm } from "react-hook-form";
 
 const Footer = () => {
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm()
+
     const { info, fetchInfo } = useWebsiteInfoStore();
 
     useEffect(() => {
@@ -19,6 +31,25 @@ const Footer = () => {
     }, [info, fetchInfo]);
 
     const { email, phone, address, instagram, telegram } = info || {};
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data) => api.post("/newsletter/subscribe", data),
+
+        onSuccess: (data) => {
+            console.log(data);
+            toast.success(data?.data?.message);
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Failed to send message.");
+        },
+    })
+
+    const onSubmit = (data) => {
+        mutate({
+            email: data.email,
+        })
+        reset()
+    }
 
     return (
         <footer
@@ -42,16 +73,21 @@ const Footer = () => {
                             </h3>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                            <form className="flex flex-col sm:flex-row gap-4">
-                                <Input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className=""
-                                />
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
+                                <div>
+                                    <Input
+                                        {...register("email", { required: true })}
+                                        type="email"
+                                        placeholder="Enter your email"
+                                    />
+                                    {errors.email && <span className="text-red-500 text-xs ml-1">Email is required</span>}
+                                </div>
                                 <Button
                                     type="submit"
                                 >
-                                    Subscribe
+                                    {
+                                        isPending ? <><Loader2 className="animate-spin" /> Loading</> : 'Subscribe'
+                                    }
                                 </Button>
                             </form>
                         </div>

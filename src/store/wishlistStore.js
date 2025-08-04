@@ -24,7 +24,7 @@ export const useWishlistStore = create((set) => ({
                 toast.success("Wishlist updated successfully.");
             }
         } catch (error) {
-            toast.error(error?.message || "Failed to update wishlist.");
+            toast.error(error?.response?.data?.message || "Failed to update wishlist.");
             console.error("Error toggling favourite:", error);
         } finally {
             set((state) => {

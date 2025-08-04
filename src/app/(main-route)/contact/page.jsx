@@ -47,7 +47,7 @@ const ContactPage = () => {
             toast.success("Message sent successfully.");
         },
         onError: (error) => {
-            toast.error(error?.message || "Failed to send message.");
+            toast.error(error?.response?.data?.message || "Failed to send message.");
         },
     })
 

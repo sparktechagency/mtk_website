@@ -36,7 +36,7 @@ export function LoginForm({ className, ...props }) {
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error?.message || "Login failed. Please check your credentials.");
+      toast.error(error?.response?.data?.message || "Login failed. Please check your credentials.");
     },
   });
 

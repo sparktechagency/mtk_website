@@ -36,7 +36,7 @@ export function ForgotPasswordForm({ className, ...props }) {
       router.push("/auth/verification")
     },
     onError: (error) => {
-      toast.error(error?.message || "Verification failed.");
+      toast.error(error?.response?.data?.message || "Verification failed.");
     },
   })
 

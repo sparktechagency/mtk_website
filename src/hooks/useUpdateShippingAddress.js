@@ -13,7 +13,7 @@ export const useUpdateShippingAddress = () => {
         queryClient.invalidateQueries({ queryKey: ["shipping-address"] });
       },
       onError: (error) => {
-        toast.error(error?.message || "Failed to update address.");
+        toast.error(error?.response?.data?.message || "Failed to update address.");
       },
     });
 

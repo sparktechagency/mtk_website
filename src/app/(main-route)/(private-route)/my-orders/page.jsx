@@ -68,7 +68,7 @@ const MyOrdersPage = () => {
             setSelectedProduct(null);
         },
         onError: (error) => {
-            toast.error(error?.message || "Failed to submit review."); 
+            toast.error(error?.response?.data?.message || "Failed to submit review."); 
         },
     });
 

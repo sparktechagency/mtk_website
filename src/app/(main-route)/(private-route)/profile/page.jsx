@@ -42,7 +42,7 @@ const ProfilePage = () => {
             queryClient.invalidateQueries({ queryKey: ["user"] });
         },
         onError: (error) => {
-            toast.error(error?.message || "Failed to update profile."); 
+            toast.error(error?.response?.data?.message || "Failed to update profile."); 
         }
     })
     // Update Password
@@ -52,7 +52,7 @@ const ProfilePage = () => {
             toast.success("Password updated successfully.");
         },
         onError: (error) => {
-            toast.error(error?.message || "Failed to update password.");
+            toast.error(error?.response?.data?.message || "Failed to update password.");
         }
     })
 

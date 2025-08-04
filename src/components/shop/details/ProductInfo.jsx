@@ -4,7 +4,7 @@ import StarRating from "@/components/shop/details/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingCart, Heart, Loader2 } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Heart, Loader2, Check } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
@@ -81,10 +81,10 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
 
             <Separator />
 
-            {/* Color Selection */}
+            {/* Color Selection
             {product?.colors && product.colors.length > 0 && (
                 <div className="flex flex-col gap-3">
-                    <h3 className="text-lg font-semibold text-subtitle">Color</h3>
+                    <h3 className="text-lg font-semibold text-subtitle">Choose a color</h3>
                     <div className="flex items-center gap-2">
                         {product.colors.map((color) => (
                             <div
@@ -100,6 +100,37 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                                 title={color.name}
                             ></div>
                         ))}
+                    </div>
+                </div>
+            )} */}
+
+            {product?.colors && product.colors.length > 0 && (
+                <div className="flex flex-col gap-3">
+                    <h3 className="text-lg font-semibold text-subtitle">Choose a color</h3>
+                    <div className="flex items-center gap-2">
+                        {product.colors.map((color) => {
+                            const isSelected = selectedColor === color.hexCode;
+                            return (
+                                <div
+                                    key={color.name}
+                                    className={cn(
+                                        "relative size-6 rounded-full border-2 cursor-pointer transition-all duration-200",
+                                        isSelected ? "border-gray-400 scale-110" : "border-gray-200 hover:scale-105"
+                                    )}
+                                    style={{ backgroundColor: color.hexCode }}
+                                    onClick={() => {
+                                        setSelectedColor(color.hexCode);
+                                    }}
+                                    title={color.name}
+                                >
+                                    {isSelected && (
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <Check className="h-4 w-4 text-white" />
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             )}

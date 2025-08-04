@@ -34,6 +34,7 @@ const CheckOutPage = () => {
     onSuccess: (data) => {
       if (data?.success) {
         window.location.href = data?.data?.url;
+        // window.open(data?.data?.url, '_blank');
       }
     },
     onError: (error) => {

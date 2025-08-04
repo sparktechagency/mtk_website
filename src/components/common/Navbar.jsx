@@ -4,11 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Heart, User, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon } from "lucide-react";
+import { Heart, User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
 import useAuthStore from "@/store/auth";
-import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
@@ -30,8 +28,6 @@ const Navbar = () => {
 
     const isLoggedIn = !!token && !!user;
     const userName = user?.fullName || "Guest";
-    const [showSearchInput, setShowSearchInput] = useState(false);
-
     const pathname = usePathname();
 
     const navLinks = [
@@ -75,15 +71,6 @@ const Navbar = () => {
                                         <SheetTitle className="sr-only">Main Menu</SheetTitle>
                                         <SheetDescription className="sr-only">Navigation links for the website.</SheetDescription>
                                     </SheetHeader>
-                                    {/* Search Input in Mobile Sidebar */}
-                                    <div className="relative px-5">
-                                        <Input
-                                            type="text"
-                                            placeholder="Search..."
-                                            className="pl-10 w-full"
-                                        />
-                                        <Search size={18} className="text-subtitle absolute left-8 top-1/2 -translate-y-1/2" />
-                                    </div>
                                     <nav className="mt-6 flex flex-col space-y-4 pl-8">
                                         {navLinks.map((link) => (
                                             <Link
@@ -130,39 +117,6 @@ const Navbar = () => {
 
                         {/* Right Action Icons */}
                         <div className="flex items-center space-x-2 lg:ml-auto">
-                            {/* Desktop Search */}
-                            <div className="hidden md:block">
-                                {showSearchInput ? (
-                                    <div className="relative flex items-center">
-                                        <Input
-                                            type="text"
-                                            placeholder="Search..."
-                                            className="w-48 pl-8 transition-all duration-300 ease-in-out"
-                                        />
-                                        <Search size={16} className="absolute left-2 text-subtitle" />
-                                        <button
-                                            className="absolute right-0 p-2 cursor-pointer"
-                                            onClick={() => setShowSearchInput(false)}
-                                        >
-                                            <X size={16} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <Button variant="ghost" size="icon" className="" onClick={() => setShowSearchInput(true)}>
-                                        <Search className="h-5 w-5 text-subtitle" />
-                                        <span className="sr-only">Search</span>
-                                    </Button>
-                                )}
-                            </div>
-
-                            {/* Heart/Favorites Icon */}
-                            {/* <Link href="/wishlist">
-                                <Button variant="ghost" size="icon" className="">
-                                    <Heart className="h-5 w-5 text-subtitle" />
-                                    <span className="sr-only">Favorites</span>
-                                </Button>
-                            </Link> */}
-
                             <div onClick={(e) => handleAuthRedirect(e, '/wishlist')}>
                                 <Button variant="ghost" size="icon" className="">
                                     <Heart className="h-5 w-5 text-subtitle" />
@@ -234,14 +188,6 @@ const Navbar = () => {
                                     )}
                                 </DropdownMenuContent>
                             </DropdownMenu>
-
-                            {/* Shopping Cart Icon */}
-                            {/* <Link href="/cart">
-                                <Button variant="ghost" size="icon" className="relative">
-                                    <ShoppingCart className="h-5 w-5 text-subtitle" />
-                                    <span className="sr-only">Shopping Cart</span>
-                                </Button>
-                            </Link> */}
 
                             <div onClick={(e) => handleAuthRedirect(e, '/cart')}>
                                 <Button variant="ghost" size="icon" className="relative">

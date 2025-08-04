@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 const SuccessContent = () => {
   const params = useSearchParams();
   const sessionId = params.get('sessionId');
+  console.log(sessionId);
 
   const { mutate: verifySession, isPending } = useMutation({
     mutationFn: (sessionId) => api.post(`/order/verify-session?sessionId=${sessionId}`),

@@ -98,7 +98,7 @@ const CartPage = () => {
                                     {[...Array(3)].map((_, i) => (
                                         <div
                                             key={i}
-                                            className="flex items-center justify-between w-full p-4 border rounded-md"
+                                            className="flex items-center justify-between w-full p-4 rounded-md"
                                         >
                                             {/* Image skeleton */}
                                             <Skeleton className="h-16 w-16 rounded-md" />

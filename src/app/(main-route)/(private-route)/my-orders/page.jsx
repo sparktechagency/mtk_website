@@ -14,15 +14,19 @@ import emptyAnimation from "../../../../../public/lottie/empty.json";
 import { toast } from "sonner";
 import { submitReview } from "@/api/review/submitReview";
 
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+
 const MyOrdersPage = () => {
     const queryClient = useQueryClient();
+    const [page, setPage] = useState(1);
 
     const { data: ordersData, isLoading, isError } = useQuery({
-        queryKey: ["orders"],
-        queryFn: getAllOrders,
+        queryKey: ["orders", page],
+        queryFn: () => getAllOrders(page),
     });
 
-    const orders = ordersData?.data || []; 
+    const orders = ordersData?.data || [];
+    const meta = ordersData?.meta || {}; 
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -172,6 +176,28 @@ const MyOrdersPage = () => {
                     isSubmittingReview={isSubmittingReview}
                     initialData={selectedProduct ? { rating: 0, comment: "", productId: selectedProduct.productId } : null}
                 />
+
+                {meta?.totalPages > 1 && (
+                    <div className="mt-8">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious href="#" onClick={() => setPage(prev => Math.max(prev - 1, 1))} />
+                                </PaginationItem>
+                                {Array.from({ length: meta?.totalPages }, (_, i) => (
+                                    <PaginationItem key={i}>
+                                        <PaginationLink href="#" isActive={page === i + 1} onClick={() => setPage(i + 1)}>
+                                            {i + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                <PaginationItem>
+                                    <PaginationNext href="#" onClick={() => setPage(prev => Math.min(prev + 1, meta?.totalPages))} />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+                )}
             </PageLayout>
         </div>
     );

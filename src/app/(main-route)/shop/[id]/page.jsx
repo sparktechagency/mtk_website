@@ -57,7 +57,7 @@ const DetailsPage = () => {
         }
     };
 
-    const {mutate, isLoading: isAddToCartLoading} = useMutation({
+    const {mutate, isPending: isAddToCartLoading} = useMutation({
         mutationFn: addToCart,
         onSuccess: () => {
             toast.success("Product added to cart successfully.");

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Heart, User, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, Moon, Sun, ShoppingCart } from "lucide-react";
+import { Search, Heart, User, Menu, LogOut, UserPlus, ChevronDown, X, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import useAuthStore from "@/store/auth";
@@ -16,10 +16,11 @@ import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useInitializeCart from "@/hooks/useCart";
 import useCartStore from "@/store/cartStore";
 import { toast } from "sonner";
+import { Toggle } from "../ui/toggle";
 
 
 const Navbar = () => {
-    const { setTheme } = useTheme()
+    const { theme, setTheme } = useTheme()
     const token = useAuthStore.getState().token;
     const clearToken = useAuthStore.getState().clearToken;
     const { user, isLoading } = useGetMe();
@@ -252,27 +253,26 @@ const Navbar = () => {
                                 </Button>
                             </div>
 
-                            {/* Dark/Light Mode Toggle */}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                        <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                                        <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-                                        <span className="sr-only">Toggle theme</span>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => setTheme("light")}>
-                                        Light
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                        Dark
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setTheme("system")}>
-                                        System
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Toggle
+                                variant="ghost"
+                                className="group data-[state=on]:hover:bg-muted size-9 data-[state=on]:bg-transparent"
+                                pressed={theme === "dark"}
+                                onPressedChange={() =>
+                                    setTheme((prev) => (prev === "dark" ? "light" : "dark"))
+                                }
+                                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                            >
+                                <MoonIcon
+                                    size={16}
+                                    className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                                    aria-hidden="true"
+                                />
+                                <SunIcon
+                                    size={16}
+                                    className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                                    aria-hidden="true"
+                                />
+                            </Toggle>
                         </div>
                     </div>
                 </div>

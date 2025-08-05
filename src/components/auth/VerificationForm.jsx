@@ -215,7 +215,7 @@ export function VerificationForm({ className, ...props }) {
         <Card className="overflow-hidden p-0">
           <CardContent className="p-6 md:p-8 flex flex-col items-center justify-center gap-4">
             <h1 className="text-xl font-semibold text-red-500">Verification Failed!</h1>
-            <p className="text-sm text-subtitle text-center">{error.message || "An unexpected error occurred."}</p>
+            <p className="text-sm text-subtitle text-center">{error?.response?.data?.message || "An unexpected error occurred."}</p>
             <Button onClick={() => router.push("/auth/sign-up")}>Go to Sign Up</Button>
           </CardContent>
         </Card>

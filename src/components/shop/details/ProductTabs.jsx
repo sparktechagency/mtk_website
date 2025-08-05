@@ -48,7 +48,7 @@ const ProductTabs = ({ product, reviewData }) => {
           <div className="bg-gray-50 rounded-lg p-8 text-center mb-6">
             <div className="text-5xl font-bold text-gray-900 mb-2">{product?.ratings}</div>
             <div className="flex justify-center items-center gap-1 mb-2">
-              <StarRating rating={product.ratings} totalStars={5} starClassName="size-5" />
+              <StarRating rating={product?.ratings} totalStars={5} starClassName="size-5" />
             </div>
             <div className="text-gray-600 font-medium">Overall Rating</div>
           </div>

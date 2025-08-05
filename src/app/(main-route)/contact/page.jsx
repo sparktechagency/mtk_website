@@ -37,7 +37,7 @@ const ContactPage = () => {
     }, [info, fetchInfo]);
     const { email, phone, address } = info || {};
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(formSchema)
     });
 
@@ -53,6 +53,7 @@ const ContactPage = () => {
 
     const onSubmit = (data) => {
         mutate(data);
+        reset();
     };
 
     return (

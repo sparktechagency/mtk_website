@@ -15,7 +15,7 @@ import { updateProfile } from "@/api/user/updateProfile";
 import { toast } from "sonner";
 import { updatePassword } from "@/api/user/updatePassword";
 import { useGetShippingAddress } from "@/hooks/useGetShippingAddress";
-import { useUpdateShippingAddress } from "@/hooks/useUpdateShippingAddress";
+import { useUpdateShippingAddress } from "@/hooks/useUpdateShippingAddress"; 
 
 const ProfilePage = () => {
     const queryClient = useQueryClient();
@@ -50,6 +50,7 @@ const ProfilePage = () => {
         mutationFn: updatePassword,
         onSuccess: () => {
             toast.success("Password updated successfully.");
+            window.location.href = "/auth/login";
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Failed to update password.");
@@ -76,16 +77,7 @@ const ProfilePage = () => {
     }
     // Update Password
     const handleUpdatePassword = (data) => {
-        const { currentPassword, newPassword, confirmNewPassword } = data;
-        if (!currentPassword || !newPassword || !confirmNewPassword) {
-            toast.error("All fields are required.");
-            return;
-        }
-
-        if (newPassword !== confirmNewPassword) {
-            toast.error("New passwords do not match.");
-            return;
-        }
+        const { currentPassword, newPassword } = data;
         const password = {
             currentPassword,
             newPassword

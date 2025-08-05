@@ -5,19 +5,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const passwordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Current password is required" }),
+    newPassword: z.string().min(6, { message: "New password must be at least 6 characters long" }),
+    confirmNewPassword: z.string()
+}).refine(data => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords don't match",
+    path: ["confirmNewPassword"],
+}).refine(data => data.currentPassword !== data.newPassword, {
+    message: "New password must be different from the current password",
+    path: ["newPassword"],
+});
 
 const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPending }) => {
-    const [passwordFields, setPasswordFields] = useState({
-        currentPassword: "",
-        newPassword: "",
-        confirmNewPassword: ""
-    });
     const [showPassword, setShowPassword] = useState(false);
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+        resolver: zodResolver(passwordSchema),
+        mode: 'onChange'
+    });
+
+    const onSubmit = (data) => {
+        handleUpdatePassword(data);
+    };
 
     return (
         <div>
             <h2 className="text-xl font-medium text-title mb-6">Change Password</h2>
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Current Password */}
                 <div>
                     <Label htmlFor="currentPassword" className="text-subtitle mb-3">Current Password</Label>
@@ -26,10 +44,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             id="currentPassword"
                             type={showPassword ? "text" : "password"}
                             placeholder="Current Password"
-                            value={passwordFields.currentPassword}
-                            onChange={(e) =>
-                                setPasswordFields({ ...passwordFields, currentPassword: e.target.value })
-                            }
+                            {...register("currentPassword")}
                             className="h-10 text-base pr-10"
                         />
                         <span
@@ -39,6 +54,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </span>
                     </div>
+                    {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword.message}</p>}
                 </div>
 
                 {/* New Password */}
@@ -49,10 +65,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             id="newPassword"
                             type={showPassword ? "text" : "password"}
                             placeholder="New Password"
-                            value={passwordFields.newPassword}
-                            onChange={(e) =>
-                                setPasswordFields({ ...passwordFields, newPassword: e.target.value })
-                            }
+                            {...register("newPassword")}
                             className="h-10 text-base pr-10"
                         />
                         <span
@@ -62,6 +75,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </span>
                     </div>
+                    {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>}
                 </div>
 
                 {/* Confirm Password */}
@@ -72,10 +86,7 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             id="confirmNewPassword"
                             type={showPassword ? "text" : "password"}
                             placeholder="Confirm New Password"
-                            value={passwordFields.confirmNewPassword}
-                            onChange={(e) =>
-                                setPasswordFields({ ...passwordFields, confirmNewPassword: e.target.value })
-                            }
+                            {...register("confirmNewPassword")}
                             className="h-10 text-base pr-10"
                         />
                         <span
@@ -85,21 +96,23 @@ const ChangePasswordTab = ({ handleUpdatePassword, setActiveTab, isPasswordPendi
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </span>
                     </div>
+                    {errors.confirmNewPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmNewPassword.message}</p>}
                 </div>
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-4 mt-6">
                     <Button
+                        type="button"
                         variant="outline"
                         onClick={() => setActiveTab("accountDetails")}
                     >
                         Cancel
                     </Button>
-                    <Button disabled={isPasswordPending} onClick={()=>handleUpdatePassword(passwordFields)}>
+                    <Button type="submit" disabled={isPasswordPending || !isValid}>
                         {isPasswordPending ? <><Loader2 className="h-4 w-4 animate-spin" /> Updating</> : "Change Password"}
                     </Button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };

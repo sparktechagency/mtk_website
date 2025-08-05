@@ -11,7 +11,7 @@ import api from "@/lib/api";
 import useAuthStore from "@/store/auth";
 import { toast } from "sonner";
 
-const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading }) => {
+const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQuantityChange, handleAddToCart, setSelectedSize, setSelectedColor, isAddToCartLoading, setMainImage }) => {
 
     const token = useAuthStore.getState().token;
     const { data: favouriteIdsResponse } = useQuery({
@@ -86,7 +86,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                     <h3 className="text-lg font-semibold text-subtitle">Choose a color</h3>
                     <div className="flex items-center gap-2">
                         {product.colors.map((color) => {
-                            const isSelected = selectedColor === color.hexCode;
+                            const isSelected = selectedColor === color.name;
                             return (
                                 <div
                                     key={color.name}
@@ -96,7 +96,11 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                                     )}
                                     style={{ backgroundColor: color.hexCode }}
                                     onClick={() => {
-                                        setSelectedColor(color.hexCode);
+                                        setSelectedColor(color.name);
+                                        const fullImage = product.images.find(image => image.includes(color.name.toLowerCase()));
+                                        if (fullImage) {
+                                            setMainImage(fullImage);
+                                        }
                                     }}
                                     title={color.name}
                                 >
@@ -136,7 +140,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
             )}
 
             {/* Quantity Selector and Add to Cart */}
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex items-center gap-4 mt-6"> 
                 <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
                     <Button variant="outline" className={cn("border-0 border-r rounded-none")} size="icon" onClick={() => handleQuantityChange("decrement")}>
                         <Minus className="size-4" />

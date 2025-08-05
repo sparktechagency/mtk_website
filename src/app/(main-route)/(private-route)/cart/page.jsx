@@ -17,7 +17,7 @@ import useCartStore from "@/store/cartStore";
 
 const CartPage = () => {
     const router = useRouter();
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient(); 
 
     const {
         cart: cartItems,
@@ -94,7 +94,7 @@ const CartPage = () => {
 
                             {/* Product Items */}
                             {isLoading ? (
-                                <div className="space-y-4">
+                                <div className="space-y-0">
                                     {[...Array(3)].map((_, i) => (
                                         <div
                                             key={i}

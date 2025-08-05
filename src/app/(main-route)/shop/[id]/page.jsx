@@ -59,7 +59,8 @@ const DetailsPage = () => {
 
     const {mutate, isPending: isAddToCartLoading} = useMutation({
         mutationFn: addToCart,
-        onSuccess: () => {
+        onSuccess: (data) => {
+            console.log(data);
             toast.success("Product added to cart successfully.");
             queryClient.invalidateQueries(["cart"]);
         },
@@ -77,6 +78,8 @@ const DetailsPage = () => {
             productId: product._id,
             quantity
         }
+
+        console.log(body)
 
         if (selectedColorName) {
             const colorObject = product.colors?.find(color => color.name === selectedColorName);

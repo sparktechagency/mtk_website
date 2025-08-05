@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, MapPin, Phone, Facebook, Instagram, Youtube, Loader2 } from "lucide-react";
+import { Mail, MapPin, Phone, Instagram, Loader2 } from "lucide-react";
 import { FaTelegramPlane } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -175,12 +175,12 @@ const Footer = () => {
                                 <Link href={`${telegram}`} target="_blank" aria-label="Twitter" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
                                     <FaTelegramPlane className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
                                 </Link>
-                                <Link href="#" aria-label="Facebook" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
+                                {/* <Link href="#" aria-label="Facebook" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
                                     <Facebook className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
                                 </Link>
                                 <Link href="#" aria-label="YouTube" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
                                     <Youtube className="w-4 h-4 text-white/70 hover:text-primary transition-colors" />
-                                </Link>
+                                </Link> */}
                                 {/* Changed from Pinterest to MessageCircleHeart based on your import */}
 
                             </div>

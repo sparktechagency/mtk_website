@@ -34,13 +34,31 @@ const CartPage = () => {
 
     const { mutate: updateMutation, isPending: isUpdatePending } = useMutation({
         mutationFn: updateCartItem,
+        onMutate: async (newItem) => {
+            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['cart'] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart']);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(['cart'], (old) =>
+                old.map((item) =>
+                    item._id === newItem.id ? { ...item, quantity: newItem.quantity } : item
+                )
+            );
+
+            return { previousCart };
+        },
         onSuccess: () => {
             toast.success("Cart updated successfully");
             queryClient.invalidateQueries(["cart"]);
         },
-        onError: () => {
+        onError: (err, newItem, context) => {
             toast.error("Failed to update cart");
-        }
+            // Rollback to the previous value
+            queryClient.setQueryData(['cart'], context.previousCart);
+        },
     });
 
     const handleRemoveItem = (id) => {

@@ -2,19 +2,43 @@ import { create } from 'zustand';
 import { toggleFavourite } from '@/api/product/toggleFavourite';
 import { toast } from 'sonner';
 
-export const useWishlistStore = create((set) => ({
-    isLoadingIds: new Set(),
-
+export const useWishlistStore = create(() => ({
     toggleFavouriteProduct: async (productId, queryClient) => {
-        set((state) => ({
-            isLoadingIds: new Set(state.isLoadingIds).add(productId)
-        }));
+        const previousFavouriteIdsData = queryClient.getQueryData(["favouriteIds"]);
+        const previousWishlistData = queryClient.getQueryData(["wishlist"]);
+
+        // Optimistically update the UI for favouriteIds
+        queryClient.setQueryData(["favouriteIds"], (old) => {
+            const currentIds = new Set(old?.data?.data || []);
+            if (currentIds.has(productId)) {
+                currentIds.delete(productId);
+            } else {
+                currentIds.add(productId);
+            }
+            return { data: { data: Array.from(currentIds) } };
+        });
+
+        // Optimistically update the UI for wishlist
+        queryClient.setQueryData(["wishlist"], (old) => {
+            if (!old || !old.data || !old.data.data) return old;
+
+            const currentProducts = old.data.data;
+            const isCurrentlyFavorite = currentProducts.some(p => p._id === productId);
+
+            let newProducts;
+            if (isCurrentlyFavorite) {
+                newProducts = currentProducts.filter(p => p._id !== productId);
+            } else {
+                // If adding, we don't have the full product data here, so we'll rely on re-fetch
+                // For now, we'll just keep the old list and let invalidateQueries handle it.
+                // A more advanced optimistic update would require passing the full product object.
+                newProducts = currentProducts;
+            }
+            return { ...old, data: { ...old.data, data: newProducts } };
+        });
 
         try {
             const response = await toggleFavourite({ productId });
-            queryClient.invalidateQueries({ queryKey: ["products"] });
-            queryClient.invalidateQueries({ queryKey: ["wishlist"] });
-            queryClient.invalidateQueries({ queryKey: ["favouriteIds"] });
 
             if (response?.message?.includes("Added")) {
                 toast.success("Product added to wishlist successfully.");
@@ -26,12 +50,13 @@ export const useWishlistStore = create((set) => ({
         } catch (error) {
             toast.error(error?.response?.data?.message || "Failed to update wishlist.");
             console.error("Error toggling favourite:", error);
+            // Rollback to the previous value for favouriteIds
+            queryClient.setQueryData(["favouriteIds"], previousFavouriteIdsData);
+            // Rollback to the previous value for wishlist
+            queryClient.setQueryData(["wishlist"], previousWishlistData);
         } finally {
-            set((state) => {
-                const newSet = new Set(state.isLoadingIds);
-                newSet.delete(productId);
-                return { isLoadingIds: newSet };
-            });
+            queryClient.invalidateQueries({ queryKey: ["favouriteIds"] });
+            queryClient.invalidateQueries({ queryKey: ["wishlist"] });
         }
     },
 }));

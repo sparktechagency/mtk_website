@@ -91,7 +91,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                                 <div
                                     key={color.name}
                                     className={cn(
-                                        "relative size-6 rounded-full border-2 cursor-pointer transition-all duration-200",
+                                        "relative size-8 rounded-full border-2 cursor-pointer transition-all duration-200",
                                         isSelected ? "border-gray-400 scale-110" : "border-gray-200 hover:scale-105"
                                     )}
                                     style={{ backgroundColor: color.hexCode }}
@@ -99,14 +99,14 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                                         setSelectedColor(color.name);
                                         const fullImage = product.images.find(image => image.includes(color.name.toLowerCase()));
                                         if (fullImage) {
-                                            setMainImage(fullImage);
+                                            setMainImage(fullImage); 
                                         }
                                     }}
                                     title={color.name}
                                 >
                                     {isSelected && (
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <Check className="h-4 w-4 text-white" />
+                                        <div className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 p-0.5 flex items-center justify-center bg-black/40 rounded-full">
+                                            <Check className="h-3 w-3 text-white" />
                                         </div>
                                     )}
                                 </div>

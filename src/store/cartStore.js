@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 const useCartStore = create((set) => ({
   cart: null,
-  isLoading: true, // Set initial loading state to true
+  isLoading: false,
   isError: false,
   setCart: (cart) => set({ cart, isLoading: false, isError: false }),
   setLoading: () => set({ isLoading: true, isError: false }),

@@ -13,17 +13,13 @@ import OrderSummary from "@/components/cart/OrderSummary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import useCartStore from "@/store/cartStore";
+import useInitializeCart from "@/hooks/useCart";
 
 const CartPage = () => {
     const router = useRouter();
-    const queryClient = useQueryClient(); 
+    const queryClient = useQueryClient();
 
-    const {
-        cart: cartItems,
-        isLoading,
-        isError,
-    } = useCartStore((state) => state);
+    const { cartData: cartItems, isLoading, isError } = useInitializeCart();
 
     const deleteMutation = useMutation({
         mutationFn: deleteCartItem,
@@ -36,7 +32,7 @@ const CartPage = () => {
         }
     });
 
-    const updateMutation = useMutation({
+    const { mutate: updateMutation, isPending: isUpdatePending } = useMutation({
         mutationFn: updateCartItem,
         onSuccess: () => {
             toast.success("Cart updated successfully");
@@ -62,7 +58,7 @@ const CartPage = () => {
         }
 
         if (newQuantity !== item?.quantity) {
-            updateMutation.mutate({ id, quantity: newQuantity });
+            updateMutation({ id, quantity: newQuantity });
         }
     };
 
@@ -132,6 +128,7 @@ const CartPage = () => {
                                             item={item}
                                             handleQuantityChange={handleQuantityChange}
                                             handleRemoveItem={handleRemoveItem}
+                                            isUpdatePending={isUpdatePending}
                                         />
                                         {index < cartItems.length - 1 && <Separator />}
                                     </React.Fragment>

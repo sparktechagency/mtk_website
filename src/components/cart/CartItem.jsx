@@ -3,8 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
+const CartItem = ({ item, handleQuantityChange, handleRemoveItem, isUpdatePending }) => {
     return (
         <React.Fragment>
             {/* Desktop View */}
@@ -29,6 +30,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                 <div className="col-span-2 flex justify-center">
                     <div className="flex items-center border rounded-md overflow-hidden">
                         <Button
+                            disabled={item.quantity === 1}
                             variant="outline"
                             size="icon"
                             className="w-8 h-8 rounded-none border-0 border-r"
@@ -87,25 +89,35 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <div className="flex items-center border rounded-md overflow-hidden">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="w-8 h-8 rounded-none border-0 border-r"
-                            onClick={() => handleQuantityChange(item._id, "decrement")}
-                        >
-                            <Minus className="size-4 text-subtitle" />
-                        </Button>
-                        <span className="px-4 text-base font-medium">{item.quantity}</span>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="w-8 h-8 rounded-none border-0 border-l"
-                            onClick={() => handleQuantityChange(item._id, "increment")}
-                        >
-                            <Plus className="size-4 text-subtitle" />
-                        </Button>
-                    </div>
+                    {
+                        isUpdatePending ? (
+                            <div className="flex items-center border rounded-md overflow-hidden">
+                                <Skeleton className="w-8 h-8 rounded-none" />
+                                <Skeleton className="px-4 w-12 h-8 rounded-none" />
+                                <Skeleton className="w-8 h-8 rounded-none" />
+                            </div>
+                        ) : (
+                            <div className="flex items-center border rounded-md overflow-hidden">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="w-8 h-8 rounded-none border-0 border-r"
+                                    onClick={() => handleQuantityChange(item._id, "decrement")}
+                                >
+                                    <Minus className="size-4 text-subtitle" />
+                                </Button>
+                                <span className="px-4 text-base font-medium">{item.quantity}</span>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="w-8 h-8 rounded-none border-0 border-l"
+                                    onClick={() => handleQuantityChange(item._id, "increment")}
+                                >
+                                    <Plus className="size-4 text-subtitle" />
+                                </Button>
+                            </div>
+                        )
+                    }
                     <Button
                         variant="ghost"
                         size="icon"

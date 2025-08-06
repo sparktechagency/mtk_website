@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks/useGetMe";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useInitializeCart from "@/hooks/useCart";
-import useCartStore from "@/store/cartStore";
+
 import { toast } from "sonner";
 import { Toggle } from "../ui/toggle";
 
@@ -22,8 +22,7 @@ const Navbar = () => {
     const token = useAuthStore.getState().token;
     const clearToken = useAuthStore.getState().clearToken;
     const { user, isLoading } = useGetMe();
-    useInitializeCart();
-    const cart = useCartStore((state) => state.cart);
+    const { cartData: cart } = useInitializeCart();
     const handleAuthRedirect = useAuthRedirect();
 
     const isLoggedIn = !!token && !!user;

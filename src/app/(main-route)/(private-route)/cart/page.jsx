@@ -23,12 +23,26 @@ const CartPage = () => {
 
     const deleteMutation = useMutation({
         mutationFn: deleteCartItem,
+        onMutate: async (idToDelete) => {
+            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['cart'] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart']);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(['cart'], (old) => old.filter(item => item._id !== idToDelete));
+
+            return { previousCart };
+        },
         onSuccess: () => {
             toast.success("Item removed from cart");
             queryClient.invalidateQueries(["cart"]);
         },
-        onError: () => {
+        onError: (err, idToDelete, context) => {
             toast.error("Failed to remove item from cart");
+            // Rollback to the previous value
+            queryClient.setQueryData(['cart'], context.previousCart);
         }
     });
 

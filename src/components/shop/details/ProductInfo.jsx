@@ -4,7 +4,7 @@ import StarRating from "@/components/shop/details/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingCart, Heart, Check } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Heart, Check, Loader2 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
@@ -154,7 +154,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                 </div>
                 <Button onClick={() => handleAddToCart(product, quantity, selectedColor, selectedSize)} className="flex-1 font-medium rounded-md shadow-md">
                     {isAddToCartLoading ? (
-                        <>Adding</>
+                        <><Loader2 className="size-5 mr-2 animate-spin" />Adding</>
                     ) : (
                         <>
                             <ShoppingCart className="size-5 mr-2" />

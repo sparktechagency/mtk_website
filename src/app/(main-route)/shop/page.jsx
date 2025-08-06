@@ -37,8 +37,8 @@ const ShopPage = () => {
     const queryClient = useQueryClient();
 
     // State for price range inputs and slider
-    const [priceRange, setPriceRange] = useState([0, 500]);
-    const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 500]);
+    const [priceRange, setPriceRange] = useState([0, 10000]);
+    const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 10000]);
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedPriceRange(priceRange);
@@ -87,7 +87,7 @@ const ShopPage = () => {
 
     // Handle input change for min price
     const handleMinPriceChange = (e) => {
-        const value = Number(e.target.value);
+        const value = Math.max(1, Number(e.target.value));
         if (!isNaN(value)) {
             setPriceRange([value, priceRange[1]]);
         }
@@ -95,7 +95,7 @@ const ShopPage = () => {
 
     // Handle input change for max price
     const handleMaxPriceChange = (e) => {
-        const value = Number(e.target.value);
+        const value = Math.max(1, Number(e.target.value));
         if (!isNaN(value)) {
             setPriceRange([priceRange[0], value]);
         }
@@ -149,9 +149,15 @@ const ShopPage = () => {
                 params.append("stockStatus", selectedAvailability);
             }
 
-            if (debouncedPriceRange[0] !== 0 || debouncedPriceRange[1] !== 500) {
-                params.append("fromPrice", debouncedPriceRange[0]);
-                params.append("toPrice", debouncedPriceRange[1]);
+            if (debouncedPriceRange[0] >= 1 || debouncedPriceRange[1] >= 1) {
+                let fromPrice = debouncedPriceRange[0];
+                let toPrice = debouncedPriceRange[1];
+
+                if (fromPrice === toPrice) {
+                    toPrice = fromPrice + 1;
+                }
+                params.append("fromPrice", fromPrice);
+                params.append("toPrice", toPrice);
             }
 
             if (selectedRating > 0) {

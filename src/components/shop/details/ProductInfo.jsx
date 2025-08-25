@@ -139,7 +139,7 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
             )}
 
             {/* Quantity Selector and Add to Cart */}
-            <div className="flex items-center gap-4 mt-6"> 
+            <div className="flex flex-wrap items-center gap-4 mt-6"> 
                 <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
                     <Button variant="outline" className={cn("border-0 border-r rounded-none")} size="icon" onClick={() => handleQuantityChange("decrement")}>
                         <Minus className="size-4" />

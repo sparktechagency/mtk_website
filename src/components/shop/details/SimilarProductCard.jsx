@@ -5,7 +5,7 @@ import { Star, Heart, Loader2 } from "lucide-react";
 const SimilarProductCard = ({ product, favouriteIds, isLoading, handleWishlistClick }) => {
 
     return (
-        <div key={product._id} className="p-1">
+        <div key={product._id} className="px-3 pt-2 rounded-xl overflow-hidden border border-gray-200 shadow">
             <div className="overflow-hidden relative">
                 {/* Product Image */}
                 <Link href={`/shop/${product?._id}`}>

@@ -1,22 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
 import StarRating from "./StarRating"
 import moment from "moment"
 
-const ProductTabs = ({ product, reviewData }) => {
-  const [visibleReviews, setVisibleReviews] = useState(3)
-
-  const handleShowMoreReviews = () => {
-    setVisibleReviews((prev) => prev + 3)
-  }
+const ProductTabs = ({ product, reviewData, currentPage, setCurrentPage, starFilter, setStarFilter }) => {
 
   const reviews = reviewData?.data?.data || []
   const totalReviews = reviewData?.data?.meta?.total || 0
+  const totalPages = reviewData?.data?.meta?.totalPages || 1
 
   return (
     <div className="w-full">
@@ -53,15 +61,31 @@ const ProductTabs = ({ product, reviewData }) => {
             <div className="text-gray-600 font-medium">Overall Rating</div>
           </div>
 
+          <div className="flex justify-end mb-4">
+            <Select value={starFilter} onValueChange={setStarFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by stars" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Stars</SelectItem>
+                <SelectItem value="5">5 Stars</SelectItem>
+                <SelectItem value="4">4 Stars</SelectItem>
+                <SelectItem value="3">3 Stars</SelectItem>
+                <SelectItem value="2">2 Stars</SelectItem>
+                <SelectItem value="1">1 Star</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {reviews.length > 0 ? (
             <div>
               <div className="text-gray-600 mb-4 font-medium">
-                Showing {Math.min(visibleReviews, reviews.length)} results
+                Showing {reviews.length} results
               </div>
 
               <div className="space-y-6">
-                {reviews.slice(0, visibleReviews).map((review) => (
-                  <div key={review._id} className="border border-gray-200 rounded-lg p-6">
+                {reviews.map((review, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg p-6">
                     <div className="flex items-start gap-4">
                       <Avatar className="h-12 w-12 flex-shrink-0">
                         <AvatarFallback className="bg-gray-200 text-gray-600 font-medium">
@@ -94,15 +118,38 @@ const ProductTabs = ({ product, reviewData }) => {
                 ))}
               </div>
 
-              {visibleReviews < reviews.length && (
-                <div className="flex justify-start mt-6">
-                  <Button
-                    variant="ghost"
-                    onClick={handleShowMoreReviews}
-                    className="text-gray-700 hover:text-gray-900 p-0 h-auto font-medium"
-                  >
-                    Show More Reviews <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-6">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                          className={currentPage === 1 ? "pointer-events-none opacity-50" : undefined}
+                        />
+                      </PaginationItem>
+                      {[...Array(totalPages)].map((_, i) => (
+                        <PaginationItem key={i}>
+                          <PaginationLink
+                            href="#"
+                            isActive={currentPage === i + 1}
+                            onClick={() => setCurrentPage(i + 1)}
+                          >
+                            {i + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                          className={currentPage === totalPages ? "pointer-events-none opacity-50" : undefined}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               )}
             </div>

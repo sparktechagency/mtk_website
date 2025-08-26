@@ -99,11 +99,20 @@ const DetailsPage = () => {
 
     }
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [starFilter, setStarFilter] = useState("");
+
     const {data: reviewData} = useQuery({
-        queryKey: ["review", productId],
+        queryKey: ["review", productId, currentPage, starFilter],
         queryFn: ({ queryKey }) => {
-            const [, productId] = queryKey;
-            return api.get(`/review/get-user-product-reviews/${productId}`);
+            const [, productId, page, star] = queryKey;
+            const params = new URLSearchParams();
+            params.append("page", page);
+            params.append("limit", 5);
+            if (star && star !== "all") {
+                params.append("star", star);
+            }
+            return api.get(`/review/get-user-product-reviews/${productId}?${params.toString()}`);
         },
         enabled: !!productId
     })
@@ -137,7 +146,14 @@ const DetailsPage = () => {
                     />
                 </div>
 
-                <ProductTabs product={product} reviewData={reviewData} />
+                <ProductTabs
+                    product={product}
+                    reviewData={reviewData}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    starFilter={starFilter}
+                    setStarFilter={setStarFilter}
+                />
 
                 {/* Similar Products */}
                 {

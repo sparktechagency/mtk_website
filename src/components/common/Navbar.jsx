@@ -123,6 +123,15 @@ const Navbar = () => {
                                 </Button>
                             </div>
 
+                            <div onClick={(e) => handleAuthRedirect(e, '/cart')}>
+                                <Button variant="ghost" size="icon" className="relative">
+                                    <ShoppingCart className="h-5 w-5 text-subtitle" />
+                                    <span className="sr-only">Shopping Cart</span>
+                                    {cart && cart.length > 0 && (
+                                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">{cart?.length}</span>
+                                    )}
+                                </Button>
+                            </div>
                             {/* User Profile Icon */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -188,15 +197,6 @@ const Navbar = () => {
                                 </DropdownMenuContent>
                             </DropdownMenu>
 
-                            <div onClick={(e) => handleAuthRedirect(e, '/cart')}>
-                                <Button variant="ghost" size="icon" className="relative">
-                                    <ShoppingCart className="h-5 w-5 text-subtitle" />
-                                    <span className="sr-only">Shopping Cart</span>
-                                    {cart && cart.length > 0 && (
-                                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">{cart?.length}</span>
-                                    )}
-                                </Button>
-                            </div>
 
                             <Toggle
                                 variant="ghost"

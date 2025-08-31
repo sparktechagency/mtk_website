@@ -19,6 +19,8 @@ const Wishlist = () => {
     const { data: wishlistResponse, isLoading: wishlistLoading } = useQuery({
         queryKey: ["wishlist"],
         queryFn: () => api.get("/favourite/get-favourite-list"),
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 5,
     });
 
     const favoriteProducts = wishlistResponse?.data?.data || [];

@@ -49,12 +49,9 @@ const CartPage = () => {
     const { mutate: updateMutation, isPending: isUpdatePending } = useMutation({
         mutationFn: updateCartItem,
         onMutate: async (newItem) => {
-            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({ queryKey: ['cart'] });
-
             // Snapshot the previous value
             const previousCart = queryClient.getQueryData(['cart']);
-
             // Optimistically update to the new value
             queryClient.setQueryData(['cart'], (old) =>
                 old.map((item) =>

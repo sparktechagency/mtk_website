@@ -126,7 +126,9 @@ const ShopPage = () => {
     // Fetch category
     const { data: categoryResponse, isLoading: categoryLoading } = useQuery({
         queryKey: ["category"],
-        queryFn: () => api.get("/category/get-category-drop-down")
+        queryFn: () => api.get("/category/get-category-drop-down"),
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 5,
     })
 
 

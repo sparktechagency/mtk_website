@@ -10,6 +10,8 @@ const useInitializeCart = () => {
     queryKey: ['cart'],
     queryFn: getCart,
     enabled: !!token,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
   });
 
   return { cartData, isLoading, isError, refetchCart: refetch };

@@ -11,6 +11,8 @@ export const useGetMe = () => {
         queryKey: ["user"],
         queryFn: getMe,
         enabled: !!token,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
     });
 
     return { user, isPending, isLoading, isError };

@@ -25,6 +25,8 @@ const DetailsPage = () => {
         queryKey: ["product", productId],
         queryFn: () => getSingleProduct(productId),
         enabled: !!productId,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 5,
     });
 
     const product = data?.product;
@@ -114,7 +116,9 @@ const DetailsPage = () => {
             }
             return api.get(`/review/get-user-product-reviews/${productId}?${params.toString()}`);
         },
-        enabled: !!productId
+        enabled: !!productId,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 5,
     })
 
 

@@ -7,7 +7,9 @@ export const useGetPolicy = (policyType) => {
         queryKey: ["policy", policyType],
         queryFn: () => api.get(`/policy/get-policy-by-type/${policyType}`),
         enabled: !!policyType,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 5,
     });
 
-    return { policy: data?.data?.data, isLoading, isError }; 
+    return { policy: data?.data?.data, isLoading, isError };
 };

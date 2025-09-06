@@ -4,6 +4,7 @@ import PolicySkeleton from "@/components/common/PolicySkeleton";
 import SimpleHero from "@/components/common/SimpleHero";
 import PageLayout from "@/components/layout/PageLayout";
 import { useGetPolicy } from "@/hooks/useGetPolicy";
+import { replaceWhiteBackground } from "@/lib/utils";
 
 const heroLinks = [
     { name: "Home", href: "/" },
@@ -13,10 +14,6 @@ const heroLinks = [
 const PrivacyPage = () => {
 
     const { policy: about, isLoading, isError } = useGetPolicy("privacy-policy");
-    const cleanHtml = (html) => {
-        if (!html) return "";
-        return html.replace(/style="([^"]*)"/g, '');
-    };
 
     return (
         <div className='min-h-minus-header'>
@@ -29,7 +26,7 @@ const PrivacyPage = () => {
                         <span className="text-red-500">Error feching privacy-policy</span>
                     </div>
                 }
-                {!isLoading && !isError && <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: cleanHtml(about?.content) }} />}
+                {!isLoading && !isError && <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: replaceWhiteBackground(about?.content) }} />}
             </PageLayout>
         </div>
     );

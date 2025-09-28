@@ -14,8 +14,7 @@ import useAuthRedirect from "@/hooks/useAuthRedirect";
 import useInitializeCart from "@/hooks/useCart";
 
 import { toast } from "sonner";
-import { Toggle } from "../ui/toggle";
-
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
     const { theme, setTheme } = useTheme()
@@ -24,6 +23,10 @@ const Navbar = () => {
     const { user, isLoading } = useGetMe();
     const { cartData: cart } = useInitializeCart();
     const handleAuthRedirect = useAuthRedirect();
+
+    const [mounted, setMounted] = useState(false);
+
+
 
     const isLoggedIn = !!token && !!user;
     const userName = user?.fullName || "Guest";
@@ -35,6 +38,10 @@ const Navbar = () => {
         { name: "Contact Us", href: "/contact" },
         { name: "Help", href: "/help" },
     ];
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleLogOut = () => {
         clearToken();
@@ -198,26 +205,26 @@ const Navbar = () => {
                             </DropdownMenu>
 
 
-                            <Toggle
-                                variant="ghost"
-                                className="group data-[state=on]:hover:bg-muted size-9 data-[state=on]:bg-transparent"
-                                pressed={theme === "dark"}
-                                onPressedChange={() =>
-                                    setTheme((prev) => (prev === "dark" ? "light" : "dark"))
-                                }
-                                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                            >
-                                <MoonIcon
-                                    size={16}
-                                    className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-                                    aria-hidden="true"
-                                />
-                                <SunIcon
-                                    size={16}
-                                    className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
-                                    aria-hidden="true"
-                                />
-                            </Toggle>
+                            {mounted && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                    className="relative"
+                                    aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                                >
+                                    <SunIcon
+                                        size={18}
+                                        className={`h-[1.2rem] w-[1.2rem] transition-all ${theme === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0'
+                                            }`}
+                                    />
+                                    <MoonIcon
+                                        size={18}
+                                        className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${theme === 'dark' ? 'rotate-0 scale-100' : 'rotate-90 scale-0'
+                                            }`}
+                                    />
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>

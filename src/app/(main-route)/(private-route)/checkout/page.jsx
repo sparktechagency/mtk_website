@@ -4,12 +4,19 @@ import React, { useEffect, useState } from 'react';
 import SimpleHero from '@/components/common/SimpleHero';
 import PageLayout from '@/components/layout/PageLayout';
 import ShippingAddressForm from '@/components/checkout/ShippingAddressForm';
-import PaymentOptions from '@/components/checkout/PaymentOptions';
 import { useGetShippingAddress } from '@/hooks/useGetShippingAddress';
 import { useUpdateShippingAddress } from '@/hooks/useUpdateShippingAddress';
 import { useMutation } from '@tanstack/react-query';
-import { checkout } from '@/api/product/checkout';
+import { checkoutWithPayNow, checkoutWithStripe, createGooglePaymentIntent } from '@/api/product/checkout';
 import { toast } from 'sonner';
+import {
+  Elements,
+} from "@stripe/react-stripe-js";
+
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentRequestButton from '@/components/checkout/PaymentRequestButton';
+
+const stripePromise = loadStripe("pk_test_51RPeq5EPhiYPoTtRQq6WRrsC4qCp72zDsBonsyDLnX1Sm2We345yHvZiATaWGhP0dFhOfdsIiutrIKvSrJIY6hNf00METLh07g"); // your publishable key
 
 const CheckOutPage = () => {
   const { mutateAddress, isAddressUpdatePending } = useUpdateShippingAddress();
@@ -29,8 +36,34 @@ const CheckOutPage = () => {
     }
   }, [addressData]);
 
-  const { mutate: createOrder, isPending: isOrderCreating } = useMutation({
-    mutationFn: checkout,
+  const { mutate: createOrderWithStripe, isPending: isOrderCreating } = useMutation({
+    mutationFn: checkoutWithStripe,
+    onSuccess: (data) => {
+      if (data?.success) {
+        window.location.href = data?.data?.url;
+        // window.open(data?.data?.url, '_blank');
+      }
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || 'Failed to create order.');
+    },
+  });
+
+  const { mutate: createOrderWithPayNow, isPending: isOrderPayNowCreating } = useMutation({
+    mutationFn: checkoutWithPayNow,
+    onSuccess: (data) => {
+      if (data?.success) {
+        window.location.href = data?.data?.url;
+        // window.open(data?.data?.url, '_blank');
+      }
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || 'Failed to create order.');
+    },
+  });
+
+  const { mutate: createPaymentIntent, isPending: isGooglePaymentLoading } = useMutation({
+    mutationFn: createGooglePaymentIntent,
     onSuccess: (data) => {
       if (data?.success) {
         window.location.href = data?.data?.url;
@@ -45,13 +78,14 @@ const CheckOutPage = () => {
   const handlePayment = () => {
     mutateAddress(shippingAddress, {
       onSuccess: () => {
+        createPaymentIntent()
         // createOrder();
-        if(paymentOption==="Stripe"){
-           toast.success("Stripe Payment Gateway");
-        }
-        if(paymentOption==="PayNow"){
-           toast.success("PayNow Payment Gateway");
-        }
+        // if(paymentOption==="Stripe"){
+        //    createOrderWithStripe();
+        // }
+        // if(paymentOption==="PayNow"){
+        //    createOrderWithPayNow()
+        // }
       },
     });
   };
@@ -73,12 +107,16 @@ const CheckOutPage = () => {
                 shippingAddress={shippingAddress}
                 setShippingAddress={setShippingAddress}
               />
-              <PaymentOptions
-                isPending={isAddressUpdatePending || isOrderCreating}
+              {/* <PaymentOptions
+                isPending={isAddressUpdatePending || isOrderCreating || isOrderPayNowCreating}
                 paymentOption={paymentOption}
                 setPaymentOption={setPaymentOption}
                 handlePayment={handlePayment}
-              />
+              /> */}
+              <Elements stripe={stripePromise}>
+                <h2>Pay with Google Pay (Test)</h2>
+                <PaymentRequestButton />
+              </Elements>
             </div>
           </div>
         </div>

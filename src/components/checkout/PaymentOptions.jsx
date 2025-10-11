@@ -36,7 +36,7 @@ const PaymentOptions = ({ paymentOption, setPaymentOption, handlePayment, isPend
                 </RadioGroup>
             </div>
             <Button disabled={isPending} onClick={handlePayment} className="w-full font-medium mt-8">
-                {isPending ? <><Loader2 className=" h-4 w-4 animate-spin" />Loading</> : `Pay with ${paymentOption}`}
+                {isPending ? <><Loader2 className=" h-4 w-4 animate-spin" />Processing...</> : `Pay with ${paymentOption}`}
             </Button>
         </div>
     );

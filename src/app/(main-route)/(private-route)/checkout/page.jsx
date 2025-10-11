@@ -19,7 +19,7 @@ const CheckOutPage = () => {
     state: '',
     zipCode: '',
   });
-  const [paymentOption, setPaymentOption] = useState('stripe');
+  const [paymentOption, setPaymentOption] = useState('');
 
   const { addressData } = useGetShippingAddress();
 
@@ -45,7 +45,13 @@ const CheckOutPage = () => {
   const handlePayment = () => {
     mutateAddress(shippingAddress, {
       onSuccess: () => {
-        createOrder();
+        // createOrder();
+        if(paymentOption==="Stripe"){
+           toast.success("Stripe Payment Gateway");
+        }
+        if(paymentOption==="PayNow"){
+           toast.success("PayNow Payment Gateway");
+        }
       },
     });
   };

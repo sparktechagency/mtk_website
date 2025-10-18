@@ -43,30 +43,28 @@ const ProductInfo = ({ product, selectedSize, selectedColor, quantity, handleQua
                 <div className="flex items-center gap-3 mt-1">
                     <span
                         className={`px-2 py-1 text-sm rounded
-                             ${product?.stockStatus === "in_stock"
+                             ${product?.stockStatus === "In Stock"
                                 ? "text-green-600 bg-green-100"
-                                : product?.stockStatus === "stock_out"
+                                : product?.stockStatus === "Out of Stock"
                                     ? "text-red-500 bg-red-50"
                                     : "text-yellow-600 bg-yellow-100"
                             }`}
                     >
-                        {
-                            product?.stockStatus === "in_stock"
-                                ? "In Stock"
-                                : product?.stockStatus === "stock_out"
-                                    ? "Out of Stock"
-                                    : "Upcoming"
-                        }
+                        {product?.stockStatus}
                     </span>
 
                     <StarRating rating={product?.ratings} starClassName="size-4" />
                     <span className="text-sm text-subtitle">({product?.totalReview} Reviews)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="text-xl md:text-2xl font-bold text-title">${product?.currentPrice?.toFixed(2)}</span>
+                    <span className="text-xl md:text-2xl font-semibold text-title">${product?.currentPrice?.toFixed(2)}</span>
                     {product?.originalPrice > 0 && (
                         <span className="text-base text-subtitle line-through">${product?.originalPrice?.toFixed(2)}</span>
                     )}
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-title">Quantity:</span>
+                    <span className="text-base text-subtitle">{product?.quantity}</span>
                 </div>
             </div>
 

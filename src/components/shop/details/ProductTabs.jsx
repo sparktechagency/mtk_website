@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import StarRating from "./StarRating"
 import moment from "moment"
+import { replaceWhiteBackground } from "@/lib/utils"
 
 const ProductTabs = ({ product, reviewData, currentPage, setCurrentPage, starFilter, setStarFilter }) => {
 
@@ -47,7 +48,7 @@ const ProductTabs = ({ product, reviewData, currentPage, setCurrentPage, starFil
         <TabsContent value="description" className="mt-6">
           <div
             className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: product?.description || "" }}
+            dangerouslySetInnerHTML={{ __html: replaceWhiteBackground(product?.description) || "" }}
           />
         </TabsContent>
 

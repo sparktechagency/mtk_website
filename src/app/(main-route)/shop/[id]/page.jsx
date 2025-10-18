@@ -53,7 +53,12 @@ const DetailsPage = () => {
 
     const handleQuantityChange = (type) => {
         if (type === "increment") {
-            setQuantity((prev) => prev + 1);
+            if (product.quantity === quantity) {
+               toast.error(`Only ${product.quantity} item(s) available in stock. Please adjust your quantity.`);
+               return;
+            }else {
+              setQuantity((prev) => prev + 1);
+            }
         } else if (type === "decrement" && quantity > 1) {
             setQuantity((prev) => prev - 1);
         }
@@ -76,12 +81,15 @@ const DetailsPage = () => {
             toast.error("Please login to add product to cart.");
             return;
         }
+
+        if(product.stockStatus==="Out of Stock"){
+            toast.error("This product is Out of Stock");
+            return;
+        }
         const body = {
             productId: product._id,
             quantity
         }
-
-        console.log(body)
 
         if (selectedColorName) {
             const colorObject = product.colors?.find(color => color.name === selectedColorName);

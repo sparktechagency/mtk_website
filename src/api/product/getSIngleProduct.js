@@ -2,7 +2,7 @@ import api from "@/lib/api";
 
 export const getSingleProduct = async (id) => {
     try {
-        const response = await api.get(`/product/get-single-product/${id}`);
+        const response = await api.get(`/product/get-user-single-product/${id}`);
         return response.data.data;
     } catch (error) {
         console.log(error);

@@ -15,6 +15,7 @@ import {
 
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentRequestButton from '@/components/checkout/PaymentRequestButton';
+import PaymentOptions from '@/components/checkout/PaymentOptions';
 
 const stripePromise = loadStripe("pk_test_51RPeq5EPhiYPoTtRQq6WRrsC4qCp72zDsBonsyDLnX1Sm2We345yHvZiATaWGhP0dFhOfdsIiutrIKvSrJIY6hNf00METLh07g"); // your publishable key
 
@@ -78,14 +79,13 @@ const CheckOutPage = () => {
   const handlePayment = () => {
     mutateAddress(shippingAddress, {
       onSuccess: () => {
-        createPaymentIntent()
-        // createOrder();
-        // if(paymentOption==="Stripe"){
-        //    createOrderWithStripe();
-        // }
-        // if(paymentOption==="PayNow"){
-        //    createOrderWithPayNow()
-        // }
+        //createPaymentIntent()
+        if(paymentOption==="Stripe"){
+           createOrderWithStripe();
+        }
+        if(paymentOption==="PayNow"){
+           createOrderWithPayNow()
+        }
       },
     });
   };
@@ -107,16 +107,16 @@ const CheckOutPage = () => {
                 shippingAddress={shippingAddress}
                 setShippingAddress={setShippingAddress}
               />
-              {/* <PaymentOptions
+              <PaymentOptions
                 isPending={isAddressUpdatePending || isOrderCreating || isOrderPayNowCreating}
                 paymentOption={paymentOption}
                 setPaymentOption={setPaymentOption}
                 handlePayment={handlePayment}
-              /> */}
-              <Elements stripe={stripePromise}>
+              />
+              {/* <Elements stripe={stripePromise}>
                 <h2>Pay with Google Pay (Test)</h2>
                 <PaymentRequestButton />
-              </Elements>
+              </Elements> */}
             </div>
           </div>
         </div>

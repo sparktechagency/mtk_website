@@ -66,7 +66,8 @@ const CartPage = () => {
             queryClient.invalidateQueries(["cart"]);
         },
         onError: (err, newItem, context) => {
-            toast.error("Failed to update cart");
+            console.log(err)
+            toast.error(err?.response?.data?.message || "Failled to update cart");
             // Rollback to the previous value
             queryClient.setQueryData(['cart'], context.previousCart);
         },

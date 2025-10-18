@@ -18,6 +18,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'triplemcompany.com',
             },
+             {
+                protocol: 'https',
+                hostname: 'krqmv-116-204-228-167.a.free.pinggy.link/',
+            },
+
         ],
     },
 };

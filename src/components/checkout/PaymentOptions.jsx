@@ -25,10 +25,18 @@ const PaymentOptions = ({ paymentOption, setPaymentOption, handlePayment, isPend
                         </div>
                         <Image src="/images/stripe.png" alt="Stripe" width={80} height={80} className="object-contain px-3 rounded" />
                     </Label>
+                    <Label
+                        htmlFor="PayNow"
+                        className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${paymentOption === "PayNow" ? "border-primary shadow-sm" : "border-gray-200"}`}>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="PayNow" id="PayNow" />
+                        </div>
+                        <Image src="/images/paynow.png" alt="PayNow" width={80} height={80} className="object-contain px-3 rounded" />
+                    </Label>
                 </RadioGroup>
             </div>
-            <Button disabled={isPending} onClick={handlePayment} className="w-full font-medium mt-8">
-                {isPending ? <><Loader2 className=" h-4 w-4 animate-spin" />Processing...</> : `Pay with ${paymentOption}`}
+            <Button disabled={isPending || paymentOption ===""} onClick={handlePayment} className="w-full font-medium mt-8">
+                {isPending ? <><Loader2 className=" h-4 w-4 animate-spin" />Processing...</> : `${paymentOption ? `Pay with ${paymentOption}` : "Pay"}`}
             </Button>
         </div>
     );

@@ -7,8 +7,10 @@ import ShippingAddressForm from '@/components/checkout/ShippingAddressForm';
 import { useGetShippingAddress } from '@/hooks/useGetShippingAddress';
 import { useUpdateShippingAddress } from '@/hooks/useUpdateShippingAddress';
 import { useMutation } from '@tanstack/react-query';
-import { checkoutWithStripe } from '@/api/product/checkout';
+import { checkoutWithPayNow, checkoutWithStripe } from '@/api/product/checkout';
 import { toast } from 'sonner';
+
+
 import PaymentOptions from '@/components/checkout/PaymentOptions';
 
 
@@ -20,7 +22,7 @@ const CheckOutPage = () => {
     state: '',
     zipCode: '',
   });
-  const [paymentOption, setPaymentOption] = useState('Stripe');
+  const [paymentOption, setPaymentOption] = useState('');
 
   const { addressData } = useGetShippingAddress();
 
@@ -43,14 +45,31 @@ const CheckOutPage = () => {
     },
   });
 
-
+  const { mutate: createOrderWithPayNow, isPending: isOrderPayNowCreating } = useMutation({
+    mutationFn: checkoutWithPayNow,
+    onSuccess: (data) => {
+      if (data?.success) {
+        window.location.href = data?.data?.url;
+        // window.open(data?.data?.url, '_blank');
+      }
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || 'Failed to create order.');
+    },
+  });
 
 
 
   const handlePayment = () => {
     mutateAddress(shippingAddress, {
       onSuccess: () => {
-        createOrderWithStripe();
+        //createPaymentIntent()
+        if(paymentOption==="Stripe"){
+           createOrderWithStripe();
+        }
+        if(paymentOption==="PayNow"){
+           createOrderWithPayNow()
+        }
       },
     });
   };
@@ -73,7 +92,7 @@ const CheckOutPage = () => {
                 setShippingAddress={setShippingAddress}
               />
               <PaymentOptions
-                isPending={isAddressUpdatePending || isOrderCreating}
+                isPending={isAddressUpdatePending || isOrderCreating || isOrderPayNowCreating}
                 paymentOption={paymentOption}
                 setPaymentOption={setPaymentOption}
                 handlePayment={handlePayment}
@@ -87,4 +106,3 @@ const CheckOutPage = () => {
 };
 
 export default CheckOutPage;
-

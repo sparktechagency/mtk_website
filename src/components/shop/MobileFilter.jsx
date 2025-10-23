@@ -75,7 +75,7 @@ const MobileFilter = ({categories, categoryLoading, priceRange, selectedRating, 
                                                 <Label htmlFor="r2-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Out of Stock</Label>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="up_coming" id="r3-mobile" />
+                                                <RadioGroupItem value="limited_stock" id="r3-mobile" />
                                                 <Label htmlFor="r3-mobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-subtitle">Up Coming</Label>
                                             </div>
                                         </RadioGroup>
